@@ -37,7 +37,7 @@ export default new Command({
 
                 user.submit();
 
-                ctx.interaction.editReply(`Added ${amount} to ${ctx.interaction.user.displayName}`);
+                ctx.interaction.editReply(`Added ${amount} XP to ${ctx.interaction.user.displayName}`);
 
                 break;
             }
