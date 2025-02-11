@@ -48,7 +48,7 @@ export default class Database {
             guildId VARCHAR(20) NOT NULL,
             xp INTEGER NOT NULL DEFAULT 0,
             
-            UNIQUE (user_id, guild_id)
+            UNIQUE (userId, guildId)
         )
 
         `);
