@@ -1,5 +1,5 @@
 # ProgressBot
-A small progress tracking bot I made for my class server.
+A small progress tracking bot I made for my class Discord server.
 
 I teach my classmates coding sometimes after school.
 
