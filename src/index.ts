@@ -17,8 +17,6 @@ async function main() {
         ]
     });
     
-    
-    
     client.once(Events.ClientReady, () => {
         console.log(`Logged in successfully as ${client.user?.tag}`);
     });
@@ -32,7 +30,7 @@ async function main() {
                 break;
             }
         }
-    })
+    });
     
     client.login(TOKEN);
 }
