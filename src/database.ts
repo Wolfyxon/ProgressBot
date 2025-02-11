@@ -2,6 +2,13 @@ import { DatabaseSync } from "node:sqlite";
 
 const TBL_USERS = "Users";
 
+export type DbUser = {
+    userId: string,
+    guildId: string,
+    xp: number,
+    level: number
+}
+
 export default class Database {
     public db: DatabaseSync;
     
@@ -24,10 +31,10 @@ export default class Database {
         `);
     }
 
-    public getGuildUsers(guild: string) {
+    public getGuildUsers(guild: string): DbUser[] {
         return this.db.prepare(`
             SELECT * FROM ${TBL_USERS} WHERE guild_id = ?
-        `).all(guild);
+        `).all(guild) as DbUser[];
     }
 
     public addUser(guild: string, user: string) {
