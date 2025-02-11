@@ -13,11 +13,13 @@ export class DbUser {
     userId: string
     guildId: string
     xp: number
+    db: Database
 
-    constructor(data: RawDbUser) {
+    constructor(data: RawDbUser, db: Database) {
         this.userId = data.userId;
         this.guildId = data.guildId;
         this.xp = data.xp;
+        this.db = db;
     }
 
     public getLevel(): number {
@@ -49,13 +51,13 @@ export default class Database {
     public getGuildUsers(guild: string): DbUser[] {
         return this.db.prepare(`
             SELECT * FROM ${TBL_USERS} WHERE guild_id = ?
-        `).all(guild).map((raw) => new DbUser(raw as RawDbUser));
+        `).all(guild).map((raw) => new DbUser(raw as RawDbUser, this));
     }
 
     public getLeaderboard(guild: string, length?: number): DbUser[] {
         return this.db.prepare(`
             SELECT * FROM ${TBL_USERS} WHERE guild_id = ? ORDER BY xp DESC LIMIT ${length ?? 20} 
-        `).all(guild).map((raw) => new DbUser(raw as RawDbUser));
+        `).all(guild).map((raw) => new DbUser(raw as RawDbUser, this));
     }
 
     public getGuildUser(guild: string, user: string): DbUser | null {
@@ -65,7 +67,7 @@ export default class Database {
 
         if(!raw) return null;
 
-        return new DbUser(raw);
+        return new DbUser(raw, this);
     }
 
     public addUser(guild: string, user: string) {
