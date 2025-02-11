@@ -37,6 +37,12 @@ export default class Database {
         `).all(guild) as DbUser[];
     }
 
+    public getGuildUser(guild: string, user: string): DbUser {
+        return this.db.prepare(`
+        SELECT * FROM ${TBL_USERS} WHERE guild_id = ? AND user_id = ?
+        `).get(guild, user) as DbUser;
+    }
+
     public addUser(guild: string, user: string) {
         const query = this.db.prepare(`
             INSERT INTO ${TBL_USERS} (userId, guildId) VALUES (?, ?)
