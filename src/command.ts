@@ -24,6 +24,12 @@ export default class Command {
         
         this.data = data;
     }
+
+    public execute(interaction: ChatInputCommandInteraction) {
+        this.data.run({
+            interaction: interaction
+        });
+    }
 }
 
 export async function getCommands(): Promise<Command[]> {
