@@ -32,8 +32,7 @@ export default new Command({
             case "add": {
                 const amount = ctx.interaction.options.getNumber("amount", true);
                 const user = ctx.interaction.options.getUser("user", true);
-
-
+                
                 const dbUser = ctx.db.getOrTemplateGuildUser(ctx.interaction.guildId!, user.id);
                 dbUser.xp += amount;
 
