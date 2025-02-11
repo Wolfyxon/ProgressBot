@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import { Client, Events, GatewayIntentBits } from "discord.js";
 import { getCommands } from "./command";
+import Database from "./database";
 
 console.log("Welcome to ProgressBot");
 console.log("https://github.com/Wolfyxon/ProgressBot");
@@ -11,6 +12,11 @@ const TOKEN: string = process.env["DISCORD_TOKEN"]!;
 
 async function main() {
     const commands = await getCommands();
+
+    const db = new Database();
+    db.setup();
+    db.addUser("testgd", "testid")
+
     const client = new Client({
         intents: [
             GatewayIntentBits.Guilds
@@ -32,7 +38,7 @@ async function main() {
         }
     });
     
-    client.login(TOKEN);
+    //client.login(TOKEN);
 }
 
 main();
