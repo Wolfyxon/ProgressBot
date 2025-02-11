@@ -70,12 +70,15 @@ export default class Database {
         return new DbUser(raw, this);
     }
 
-    public addUser(guild: string, user: string) {
+    public setupUser(guild: string, user: string) {
         const query = this.db.prepare(`
             INSERT INTO ${TBL_USERS} (userId, guildId) VALUES (?, ?)
+            WHERE NOT EXISTS(
+                SELECT * FROM ${TBL_USERS} WHERE userId = ? AND guildId = ?
+            )
         `);
 
-        query.run(user, guild);
+        query.run(user, guild, user, guild);
     }
 
     public userExists(guild: string, user: string) {
