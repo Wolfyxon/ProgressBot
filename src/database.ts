@@ -5,8 +5,7 @@ const TBL_USERS = "Users";
 export type DbUser = {
     userId: string,
     guildId: string,
-    xp: number,
-    level: number
+    xp: number
 }
 
 export default class Database {
@@ -23,7 +22,6 @@ export default class Database {
             userId VARCHAR(20) NOT NULL,
             guildId VARCHAR(20) NOT NULL,
             xp INTEGER NOT NULL DEFAULT 0,
-            level INTEGER NOT NULL DEFAULT 1,
             
             UNIQUE (user_id, guild_id)
         )
