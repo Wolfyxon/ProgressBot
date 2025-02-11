@@ -35,12 +35,12 @@ export async function registerGuildCommands(client: string, guild: string) {
     const cmds = await getCommands();
     const body = cmds.map(cmd => cmd.data.builder.toJSON());
 
-    const rest = new REST().setToken(process.env.TOKEN!);
+    const rest = new REST().setToken(process.env.DISCORD_TOKEN!);
 
     await rest.put(
         Routes.applicationGuildCommands(client, guild),
         {
-            body: cmds
+            body: body
         }
     );
 
