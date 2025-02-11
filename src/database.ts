@@ -87,6 +87,18 @@ export default class Database {
         return usr;
     }
 
+    public getOrTemplateGuildUser(guild: string, user: string): DbUser {
+        const usr = this.getGuildUser(guild, user);
+
+        if(usr) return usr;
+
+        return new DbUser({
+            userId: user,
+            guildId: guild,
+            xp: 0
+        }, this);
+    }
+
     public setupUser(guild: string, user: string) {
         const query = this.db.prepare(`
             INSERT INTO ${TBL_USERS} (userId, guildId) VALUES (?, ?)
