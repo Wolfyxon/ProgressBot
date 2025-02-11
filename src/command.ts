@@ -1,3 +1,4 @@
+import assert from "assert";
 import { CommandInteraction, REST, Routes, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder } from "discord.js";
 import * as fs from "fs";
 
@@ -17,6 +18,10 @@ export default class Command {
     public data: CommandData
 
     constructor(data: CommandData) {
+        assert(data.builder.description, "Command description must be specified");
+        
+        // TODO: Also check options
+        
         this.data = data;
     }
 }
