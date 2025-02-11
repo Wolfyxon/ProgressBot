@@ -10,9 +10,9 @@ export default new Command({
                 
             ),
     
-    run: async (interaction: CommandInteraction) => {
-        const msg = interaction.options.get("text")!.value as string;
+    run: async (ctx) => {
+        const msg = ctx.interaction.options.get("text")!.value as string;
 
-        interaction.reply(msg);
+        ctx.interaction.reply(msg);
     }
 });

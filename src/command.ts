@@ -3,8 +3,13 @@ import * as fs from "fs";
 
 type CommandData = {
     builder: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder,
-    run: (interaction: CommandInteraction) => void
+    run: (ctx: CommandRunContext) => void
 };
+
+// Add more fields if needed in the future
+type CommandRunContext = {
+    interaction: CommandInteraction
+}
 
 const COMMAND_DIR = "src/commands";
 
