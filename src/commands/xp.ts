@@ -31,11 +31,13 @@ export default new Command({
         switch (ctx.interaction.options.getSubcommand(true)) {
             case "add": {
                 const amount = ctx.interaction.options.getNumber("amount", true);
+                const user = ctx.interaction.options.getUser("user", true);
 
-                const user = ctx.db.getOrTemplateGuildUser(ctx.interaction.guildId!, ctx.interaction.user.id);
-                user.xp += amount;
 
-                user.submit();
+                const dbUser = ctx.db.getOrTemplateGuildUser(ctx.interaction.guildId!, user.id);
+                dbUser.xp += amount;
+
+                dbUser.submit();
 
                 ctx.interaction.editReply(`Added ${amount} XP to ${ctx.interaction.user.displayName}`);
 
