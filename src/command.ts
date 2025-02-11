@@ -1,10 +1,10 @@
 import assert from "assert";
-import { ChatInputCommandInteraction, REST, Routes, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder } from "discord.js";
+import { ChatInputCommandInteraction, REST, Routes, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from "discord.js";
 import * as fs from "fs";
 import Database from "./database";
 
 type CommandData = {
-    builder: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder,
+    builder: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder | SlashCommandSubcommandsOnlyBuilder,
     run: (ctx: CommandRunContext) => void
 };
 
