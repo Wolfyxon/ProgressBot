@@ -69,4 +69,8 @@ export default class Database {
 
         query.run(user, guild);
     }
+
+    public userExists(guild: string, user: string) {
+        return this.getGuildUser(guild, user) != null;
+    }
 }
