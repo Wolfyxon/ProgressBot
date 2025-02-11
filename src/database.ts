@@ -70,6 +70,17 @@ export default class Database {
         return new DbUser(raw, this);
     }
 
+    public getOrSetupGuildUser(guild: string, user: string): DbUser {
+        const usr = this.getGuildUser(guild, user);
+
+        if(!usr) {
+            this.setupUser(guild, user);
+            return this.getGuildUser(guild, user)!;
+        }
+
+        return usr;
+    }
+
     public setupUser(guild: string, user: string) {
         const query = this.db.prepare(`
             INSERT INTO ${TBL_USERS} (userId, guildId) VALUES (?, ?)
