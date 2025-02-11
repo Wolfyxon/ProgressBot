@@ -11,3 +11,7 @@ export function getLevel(totalXp: number): number {
 
     return lvl;
 }
+
+export function getTotalXpForNextLevel(currentLevel: number): number {
+    return getTotalXpForLevel(currentLevel + 1) - getTotalXpForLevel(currentLevel);
+}
