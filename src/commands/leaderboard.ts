@@ -1,5 +1,6 @@
 import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import Command from "../command";
+import { getRelativeXpForNextLevel } from "../xpMath";
 
 export default new Command({
     builder: new SlashCommandBuilder()
@@ -23,7 +24,12 @@ export default new Command({
         ];
         
         const description = users.map((user, i) => {
-            return `${emojis[i] ?? "#" + (i + 1)} <@${user.userId}>`;    
+            const prefix = emojis[i] ?? "#" + (i + 1);
+            const level = user.getLevel();
+            const xp = user.getLevelXp();
+            const requiredXp = getRelativeXpForNextLevel(level);
+
+            return `${prefix} <@${user.userId}>: Level **${level}** (${xp} / ${requiredXp} )`;    
         });
 
         const embed = new EmbedBuilder()
