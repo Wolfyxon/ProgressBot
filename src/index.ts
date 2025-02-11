@@ -15,7 +15,7 @@ async function main() {
 
     const db = new Database();
     db.setup();
-    db.addUser("testgd", "testid")
+    
 
     const client = new Client({
         intents: [
@@ -32,7 +32,7 @@ async function main() {
 
         for(const cmd of commands) {
             if(cmd.data.builder.name == interaction.commandName) {
-                cmd.execute(interaction);
+                cmd.execute(interaction, db);
                 break;
             }
         }

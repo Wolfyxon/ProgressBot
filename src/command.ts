@@ -1,6 +1,7 @@
 import assert from "assert";
 import { ChatInputCommandInteraction, REST, Routes, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder } from "discord.js";
 import * as fs from "fs";
+import Database from "./database";
 
 type CommandData = {
     builder: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder,
@@ -9,7 +10,8 @@ type CommandData = {
 
 // Add more fields if needed in the future
 type CommandRunContext = {
-    interaction: ChatInputCommandInteraction
+    interaction: ChatInputCommandInteraction,
+    db: Database
 }
 
 const COMMAND_DIR = "src/commands";
@@ -25,9 +27,10 @@ export default class Command {
         this.data = data;
     }
 
-    public execute(interaction: ChatInputCommandInteraction) {
+    public execute(interaction: ChatInputCommandInteraction, db: Database) {
         this.data.run({
-            interaction: interaction
+            interaction: interaction,
+            db: db
         });
     }
 }
