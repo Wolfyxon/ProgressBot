@@ -56,19 +56,19 @@ export default class Database {
 
     public getGuildUsers(guild: string): DbUser[] {
         return this.db.prepare(`
-            SELECT * FROM ${TBL_USERS} WHERE guild_id = ?
+            SELECT * FROM ${TBL_USERS} WHERE guildId = ?
         `).all(guild).map((raw) => new DbUser(raw as RawDbUser, this));
     }
 
     public getLeaderboard(guild: string, length?: number): DbUser[] {
         return this.db.prepare(`
-            SELECT * FROM ${TBL_USERS} WHERE guild_id = ? ORDER BY xp DESC LIMIT ${length ?? 20} 
+            SELECT * FROM ${TBL_USERS} WHERE guildId = ? ORDER BY xp DESC LIMIT ${length ?? 20} 
         `).all(guild).map((raw) => new DbUser(raw as RawDbUser, this));
     }
 
     public getGuildUser(guild: string, user: string): DbUser | null {
         const raw = this.db.prepare(`
-        SELECT * FROM ${TBL_USERS} WHERE guild_id = ? AND user_id = ?
+        SELECT * FROM ${TBL_USERS} WHERE guildId = ? AND userId = ?
         `).get(guild, user) as RawDbUser;
 
         if(!raw) return null;
