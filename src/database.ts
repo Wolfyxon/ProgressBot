@@ -13,8 +13,8 @@ export default class Database {
         this.db.exec(`
 
         CREATE TABLE IF NOT EXISTS ${TBL_USERS} (
-            user_id VARCHAR(20) NOT NULL,
-            guild_id VARCHAR(20) NOT NULL,
+            userId VARCHAR(20) NOT NULL,
+            guildId VARCHAR(20) NOT NULL,
             xp INTEGER NOT NULL DEFAULT 0,
             level INTEGER NOT NULL DEFAULT 1,
             
@@ -32,7 +32,7 @@ export default class Database {
 
     public addUser(guild: string, user: string) {
         const query = this.db.prepare(`
-            INSERT INTO ${TBL_USERS} (user_id, guild_id) VALUES (?, ?)
+            INSERT INTO ${TBL_USERS} (userId, guildId) VALUES (?, ?)
         `);
 
         query.run(user, guild);
