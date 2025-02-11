@@ -1,4 +1,4 @@
-import { CommandInteraction, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder } from "discord.js";
+import { CommandInteraction, REST, Routes, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder } from "discord.js";
 import * as fs from "fs";
 
 type CommandData = {
@@ -27,4 +27,22 @@ export async function getCommands(): Promise<Command[]> {
 
         return module.default as Command;
     }));
+}
+
+export async function registerGuildCommands(client: string, guild: string) {
+    console.log(`Deploying commands in guild: ${guild}...`);
+    
+    const cmds = await getCommands();
+    const body = cmds.map(cmd => cmd.data.builder.toJSON());
+
+    const rest = new REST().setToken(process.env.TOKEN!);
+
+    await rest.put(
+        Routes.applicationGuildCommands(client, guild),
+        {
+            body: cmds
+        }
+    );
+
+    console.log("Command registration successful");
 }
