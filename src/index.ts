@@ -19,7 +19,8 @@ async function main() {
 
     const client = new Client({
         intents: [
-            GatewayIntentBits.Guilds
+            GatewayIntentBits.Guilds,
+            GatewayIntentBits.GuildMembers
         ]
     });
     
