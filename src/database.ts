@@ -2,11 +2,23 @@ import { DatabaseSync } from "node:sqlite";
 
 const TBL_USERS = "Users";
 
-export type DbUser = {
+type RawDbUser = {
     userId: string,
     guildId: string,
     xp: number
 }
+
+export class DbUser {
+    userId: string
+    guildId: string
+    xp: number
+
+    constructor(data: RawDbUser) {
+        this.userId = data.userId;
+        this.guildId = data.guildId;
+        this.xp = data.xp;
+    }
+} 
 
 export default class Database {
     public db: DatabaseSync;
@@ -32,13 +44,17 @@ export default class Database {
     public getGuildUsers(guild: string): DbUser[] {
         return this.db.prepare(`
             SELECT * FROM ${TBL_USERS} WHERE guild_id = ?
-        `).all(guild) as DbUser[];
+        `).all(guild).map((raw) => new DbUser(raw as RawDbUser));
     }
 
-    public getGuildUser(guild: string, user: string): DbUser {
-        return this.db.prepare(`
+    public getGuildUser(guild: string, user: string): DbUser | null {
+        const raw = this.db.prepare(`
         SELECT * FROM ${TBL_USERS} WHERE guild_id = ? AND user_id = ?
-        `).get(guild, user) as DbUser;
+        `).get(guild, user) as RawDbUser;
+
+        if(!raw) return null;
+
+        return new DbUser(raw);
     }
 
     public addUser(guild: string, user: string) {
