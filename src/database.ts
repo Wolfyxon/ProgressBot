@@ -25,6 +25,12 @@ export class DbUser {
     public getLevel(): number {
         return getLevel(this.xp);
     }
+
+    public submit() {
+        this.db.db.prepare(`
+            INSERT OR REPLACE INTO ${TBL_USERS} (userId, guildId, xp) VALUES (?, ?, ?)
+        `).run(this.userId, this.guildId, this.xp);
+    }
 } 
 
 export default class Database {
