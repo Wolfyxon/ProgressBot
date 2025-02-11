@@ -4,8 +4,11 @@ import Command from "../command";
 export default new Command({
     builder: new SlashCommandBuilder()
             .setName("say")
+            .setDescription("Repeats text")
+            
             .addStringOption(option => option
                 .setName("text")
+                .setDescription("Text to repeat")
                 .setRequired(true)
                 
             ),
