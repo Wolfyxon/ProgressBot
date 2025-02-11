@@ -25,9 +25,9 @@ export default class Database {
     }
 
     public getGuildUsers(guild: string) {
-        this.db.prepare(`
-            SELECT * FROM ${TBL_USERS} WHERE guild_id = ${guild}
-        `).all();
+        return this.db.prepare(`
+            SELECT * FROM ${TBL_USERS} WHERE guild_id = ?
+        `).all(guild);
     }
 
     public addUser(guild: string, user: string) {
