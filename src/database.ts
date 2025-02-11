@@ -1,5 +1,5 @@
 import { DatabaseSync } from "node:sqlite";
-import { getLevel } from "./xpMath";
+import { getLevel, getTotalXpForLevel } from "./xpMath";
 
 const TBL_USERS = "Users";
 
@@ -24,6 +24,10 @@ export class DbUser {
 
     public getLevel(): number {
         return getLevel(this.xp);
+    }
+
+    public getLevelXp(): number {
+        return this.xp - getTotalXpForLevel(this.getLevel());
     }
 
     public submit() {
