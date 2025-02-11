@@ -64,6 +64,8 @@ export default new Command({
                 }
 
                 members.forEach((member) => {
+                    if(member.user.bot) return;
+
                     ctx.db.setupUser(ctx.interaction.guildId!, member.id);
                 });
 
