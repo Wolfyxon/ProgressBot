@@ -17,7 +17,7 @@ export default new Command({
         await ctx.interaction.deferReply();
 
         const user = ctx.interaction.options.getUser("user") ?? ctx.interaction.user;
-        const dbUser = ctx.db.getOrTemplateGuildUser(ctx.interaction.guildId!, user.id);
+        const dbUser = ctx.db.getUser(ctx.interaction.guildId!, user.id);
 
         const xp = dbUser.getLevelXp();
         const reqXp = dbUser.getXpForNextLevel();

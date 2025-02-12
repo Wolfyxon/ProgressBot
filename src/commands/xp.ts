@@ -38,7 +38,7 @@ export default new Command({
                 const amount = ctx.interaction.options.getNumber("amount", true);
                 const user = ctx.interaction.options.getUser("user", true);
 
-                const dbUser = ctx.db.getOrTemplateGuildUser(ctx.interaction.guildId!, user.id);
+                const dbUser = ctx.db.getUser(ctx.interaction.guildId!, user.id);
                 dbUser.xp += amount;
 
                 dbUser.submit();

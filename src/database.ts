@@ -153,25 +153,14 @@ export default class Database {
         );
     }
 
-    public getGuildUser(guild: string, user: string): DbUser | null {
+    public getUserOrNull(guild: string, user: string): DbUser | null {
         const res = this.queryGuildUser(guild, user);
         
         return res.value;
     }
 
-    public getOrSetupGuildUser(guild: string, user: string): DbUser {
-        const usr = this.getGuildUser(guild, user);
-
-        if(!usr) {
-            this.setupUser(guild, user);
-            return this.getGuildUser(guild, user)!;
-        }
-
-        return usr;
-    }
-
-    public getOrTemplateGuildUser(guild: string, user: string): DbUser {
-        const usr = this.getGuildUser(guild, user);
+    public getUser(guild: string, user: string): DbUser {
+        const usr = this.getUserOrNull(guild, user);
 
         if(usr) return usr;
 
@@ -189,6 +178,6 @@ export default class Database {
     }
 
     public userExists(guild: string, user: string) {
-        return this.getGuildUser(guild, user) != null;
+        return this.getUserOrNull(guild, user) != null;
     }
 }
