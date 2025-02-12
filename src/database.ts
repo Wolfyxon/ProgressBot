@@ -79,7 +79,7 @@ export default class Database {
         `);
     }
 
-    public query(sql: string, ...params: string[]): DbResult<any[]> {
+    public queryAll(sql: string, ...params: string[]): DbResult<any[]> {
         const q = this.db.prepare(sql);
         
         return new DbResult<any[]>(
