@@ -1,5 +1,5 @@
 import { DatabaseSync, StatementSync, StatementResultingChanges } from "node:sqlite";
-import { getLevel, getTotalXpForLevel } from "./xpMath";
+import { getLevel, getRelativeXpForNextLevel, getTotalXpForLevel } from "./xpMath";
 import { EmbedBuilder } from "discord.js";
 
 const TBL_USERS = "Users";
@@ -53,6 +53,10 @@ export class DbUser {
 
     public getLevelXp(): number {
         return this.xp - getTotalXpForLevel(this.getLevel());
+    }
+
+    public getXpForNextLevel(): number {
+        return getRelativeXpForNextLevel(this.getLevel());
     }
 
     public submit() {
