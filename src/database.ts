@@ -17,14 +17,16 @@ export class DbResult<T> {
         return this.statement.expandedSQL.trim();
     }
 
+    public getCodeBlock(): string {
+        return "```sql\n" +
+                this.getSql() +
+                "\n```"
+    }
+
     public getEmbed(): EmbedBuilder {
         return new EmbedBuilder()
             .setTitle("SQL Code")
-            .setDescription(
-                "```sql\n" +
-                this.getSql() +
-                "\n```"
-            )
+            .setDescription(this.getCodeBlock())
     }
 }
 
