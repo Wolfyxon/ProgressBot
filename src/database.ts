@@ -110,7 +110,7 @@ export default class Database {
         );
     }
 
-    public getGuildUsers(guild: string): DbResult<DbUser[]> {
+    public queryGuildUsers(guild: string): DbResult<DbUser[]> {
         const res = this.queryAll(`SELECT * FROM ${TBL_USERS} WHERE guildId = ?`, guild);
 
         return new DbResult<DbUser[]> (
