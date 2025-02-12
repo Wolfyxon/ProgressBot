@@ -31,7 +31,9 @@ export class DbResult<T> {
 }
 
 export class DbRunResult extends DbResult<StatementResultingChanges> {
-
+    public hasChanges(): boolean {
+        return this.value.changes != 0;
+    }
 }
 
 type RawDbUser = {
