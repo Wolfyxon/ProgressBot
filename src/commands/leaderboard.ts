@@ -38,7 +38,7 @@ export default new Command({
             .setDescription(description.join("\n"))
 
         ctx.interaction.editReply({
-            embeds: [embed]
+            embeds: [embed, res.getEmbed()]
         });
     }
 });
