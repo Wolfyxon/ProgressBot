@@ -8,7 +8,6 @@ type CommandData = {
     run: (ctx: CommandRunContext) => void
 };
 
-// Add more fields if needed in the future
 type CommandRunContext = {
     interaction: ChatInputCommandInteraction,
     db: Database
