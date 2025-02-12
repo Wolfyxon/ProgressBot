@@ -155,14 +155,27 @@ export default class Database {
         );
     }
 
-    public queryAndAddUser(guild: string, user: string): { add: DbRunResult, get: DbResult<DbUser> } {
-        const add = this.setupUser(guild, user);
-        const get = this.queryGuildUser(guild, user);
+    public queryOrSetupUser(guild: string, user: string): { user: DbUser, result: DbResult<DbUser> | DbRunResult } {
+        const setup = this.setupUser(guild, user);
+
+        if(setup.hasChanges()) {
+            return {
+                user: new DbUser({
+                    userId: user,
+                    guildId: guild,
+                    xp: 0
+                }, this),
+
+                result: setup
+            }
+        }
+
+        const query = this.queryGuildUser(guild, user);
 
         return {
-            add: add,
-            get: get as DbResult<DbUser>
-        };
+            user: query.value as DbUser,
+            result: query as DbResult<DbUser>
+        }
     }
 
     public getUserOrNull(guild: string, user: string): DbUser | null {

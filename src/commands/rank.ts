@@ -17,7 +17,9 @@ export default new Command({
         await ctx.interaction.deferReply();
 
         const user = ctx.interaction.options.getUser("user") ?? ctx.interaction.user;
-        const dbUser = ctx.db.getUser(ctx.interaction.guildId!, user.id);
+        
+        const res = ctx.db.queryOrSetupUser(ctx.interaction.guildId!, user.id)
+        const dbUser = res.user;
 
         const xp = dbUser.getLevelXp();
         const reqXp = dbUser.getXpForNextLevel();
@@ -39,6 +41,9 @@ export default new Command({
                             text: `@${user.tag} | ${user.id}`
                         })
 
-        ctx.interaction.editReply({embeds: [embed]});
+        ctx.interaction.editReply({
+            content: res.result.getCodeBlock(),
+            embeds: [embed]
+        });
     }
 });
