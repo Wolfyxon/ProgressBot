@@ -1,4 +1,4 @@
-import { DatabaseSync, StatementSync } from "node:sqlite";
+import { DatabaseSync, StatementSync, StatementResultingChanges } from "node:sqlite";
 import { getLevel, getTotalXpForLevel } from "./xpMath";
 import { EmbedBuilder } from "discord.js";
 
@@ -85,6 +85,15 @@ export default class Database {
         return new DbResult<any[]>(
             q,
             q.all(...params)
+        );
+    }
+
+    public run(sql: string, ...params: string[]): DbResult<StatementResultingChanges> {
+        const q = this.db.prepare(sql);
+
+        return new DbResult<StatementResultingChanges>(
+            q,
+            q.run(...params)
         );
     }
 
