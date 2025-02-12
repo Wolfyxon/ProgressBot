@@ -97,16 +97,24 @@ export default class Database {
         );
     }
 
-    public getGuildUsers(guild: string): DbUser[] {
-        return this.db.prepare(`
-            SELECT * FROM ${TBL_USERS} WHERE guildId = ?
-        `).all(guild).map((raw) => new DbUser(raw as RawDbUser, this));
+    public getGuildUsers(guild: string): DbResult<DbUser[]> {
+        const res = this.queryAll(`SELECT * FROM ${TBL_USERS} WHERE guildId = ?`, guild);
+
+        return new DbResult<DbUser[]> (
+            res.statement,
+            res.value.map((raw) => new DbUser(raw as RawDbUser, this))
+        );
     }
 
-    public getLeaderboard(guild: string, length?: number): DbUser[] {
-        return this.db.prepare(`
+    public getLeaderboard(guild: string, length?: number): DbResult<DbUser[]> {
+        const res = this.queryAll(`
             SELECT * FROM ${TBL_USERS} WHERE guildId = ? ORDER BY xp DESC LIMIT ${length ?? 20} 
-        `).all(guild).map((raw) => new DbUser(raw as RawDbUser, this));
+        `, guild);
+
+        return new DbResult<DbUser[]>(
+            res.statement,
+            res.value.map((raw) => new DbUser(raw as RawDbUser, this))
+        )
     }
 
     public getGuildUser(guild: string, user: string): DbUser | null {
@@ -142,12 +150,10 @@ export default class Database {
         }, this);
     }
 
-    public setupUser(guild: string, user: string) {
-        const query = this.db.prepare(`
+    public setupUser(guild: string, user: string): DbResult<StatementResultingChanges> {
+        return this.run(`
             INSERT OR IGNORE INTO ${TBL_USERS} (userId, guildId) VALUES (?, ?)
-        `);
-
-        query.run(user, guild);
+        `, user, guild);
     }
 
     public userExists(guild: string, user: string) {

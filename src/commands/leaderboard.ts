@@ -10,8 +10,9 @@ export default new Command({
     run: async (ctx) => {
         await ctx.interaction.deferReply();
 
-        const users = ctx.db.getLeaderboard(ctx.interaction.guildId!);
-        
+        const res = ctx.db.getLeaderboard(ctx.interaction.guildId!);
+        const users = res.value;
+
         if(users.length == 0) {
             ctx.interaction.editReply("No users are added for this server!");
             return;
