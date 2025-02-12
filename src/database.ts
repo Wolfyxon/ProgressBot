@@ -92,6 +92,15 @@ export default class Database {
         );
     }
 
+    public query(sql: string, ...params: string[]): DbResult<any> {
+        const q = this.db.prepare(sql);
+
+        return new DbResult<any>(
+            q,
+            q.get(...params)
+        );
+    }
+
     public run(sql: string, ...params: string[]): DbRunResult {
         const q = this.db.prepare(sql);
 
