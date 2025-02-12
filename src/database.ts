@@ -14,13 +14,17 @@ export class DbResult<T> {
     }
 
     public getSql(): string {
-        return this.statement.expandedSQL;
+        return this.statement.expandedSQL.trim();
     }
 
     public getEmbed(): EmbedBuilder {
         return new EmbedBuilder()
             .setTitle("SQL Code")
-            .setDescription(`\`\`\`sql ${this.getSql()} \`\`\``)
+            .setDescription(
+                "```sql\n" +
+                this.getSql() +
+                "\n```"
+            )
     }
 }
 
