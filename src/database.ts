@@ -1,5 +1,6 @@
 import { DatabaseSync, StatementSync } from "node:sqlite";
 import { getLevel, getTotalXpForLevel } from "./xpMath";
+import { EmbedBuilder } from "discord.js";
 
 const TBL_USERS = "Users";
 
@@ -14,6 +15,12 @@ export class DbResult<T> {
 
     public getSql(): string {
         return this.statement.expandedSQL;
+    }
+
+    public getEmbed(): EmbedBuilder {
+        return new EmbedBuilder()
+            .setTitle("SQL Code")
+            .setDescription(`\`\`\`sql ${this.getSql()} \`\`\``)
     }
 }
 
