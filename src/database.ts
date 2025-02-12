@@ -1,7 +1,21 @@
-import { DatabaseSync } from "node:sqlite";
+import { DatabaseSync, StatementSync } from "node:sqlite";
 import { getLevel, getTotalXpForLevel } from "./xpMath";
 
 const TBL_USERS = "Users";
+
+export class DbResult<T> {
+    statement: StatementSync
+    value: T
+
+    constructor(statement: StatementSync, value: T) {
+        this.statement = statement;
+        this.value = value;
+    }
+
+    public getSql(): string {
+        return this.statement.expandedSQL;
+    }
+}
 
 type RawDbUser = {
     userId: string,
@@ -56,6 +70,15 @@ export default class Database {
         )
 
         `);
+    }
+
+    public query(sql: string, ...params: string[]): DbResult<any[]> {
+        const q = this.db.prepare(sql);
+        
+        return new DbResult<any[]>(
+            q,
+            q.all(...params)
+        );
     }
 
     public getGuildUsers(guild: string): DbUser[] {
