@@ -119,7 +119,7 @@ export default class Database {
         );
     }
 
-    public getLeaderboard(guild: string, length?: number): DbResult<DbUser[]> {
+    public queryLeaderboard(guild: string, length?: number): DbResult<DbUser[]> {
         const res = this.queryAll(`
             SELECT * FROM ${TBL_USERS} WHERE guildId = ? ORDER BY xp DESC LIMIT ${length ?? 20} 
         `, guild);
