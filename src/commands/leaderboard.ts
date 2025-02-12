@@ -1,6 +1,6 @@
-import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
-import Command from "../command";
+import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { getRelativeXpForNextLevel } from "../xpMath";
+import Command from "../command";
 
 export default new Command({
     builder: new SlashCommandBuilder()

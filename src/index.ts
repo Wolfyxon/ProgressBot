@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { Client, Events, GatewayIntentBits } from "discord.js";
-import { getCommands, registerGuildCommands } from "./command";
+import { getCommands } from "./command";
 import Database from "./database";
 
 console.log("Welcome to ProgressBot");
@@ -15,7 +15,6 @@ async function main() {
 
     const db = new Database();
     db.setup();
-
 
     const client = new Client({
         intents: [

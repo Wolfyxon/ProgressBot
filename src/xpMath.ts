@@ -1,3 +1,4 @@
+
 export function getTotalXpForLevel(level: number): number {
     return 10 * (level - 1) ** 2;
 }
