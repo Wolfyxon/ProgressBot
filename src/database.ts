@@ -153,6 +153,16 @@ export default class Database {
         );
     }
 
+    public queryAndAddUser(guild: string, user: string): { add: DbRunResult, get: DbResult<DbUser> } {
+        const add = this.setupUser(guild, user);
+        const get = this.queryGuildUser(guild, user);
+
+        return {
+            add: add,
+            get: get as DbResult<DbUser>
+        };
+    }
+
     public getUserOrNull(guild: string, user: string): DbUser | null {
         const res = this.queryGuildUser(guild, user);
         
