@@ -24,6 +24,10 @@ export class DbResult<T> {
     }
 }
 
+export class DbRunResult extends DbResult<StatementResultingChanges> {
+
+}
+
 type RawDbUser = {
     userId: string,
     guildId: string,
@@ -88,10 +92,10 @@ export default class Database {
         );
     }
 
-    public run(sql: string, ...params: string[]): DbResult<StatementResultingChanges> {
+    public run(sql: string, ...params: string[]): DbRunResult {
         const q = this.db.prepare(sql);
 
-        return new DbResult<StatementResultingChanges>(
+        return new DbRunResult(
             q,
             q.run(...params)
         );
@@ -150,7 +154,7 @@ export default class Database {
         }, this);
     }
 
-    public setupUser(guild: string, user: string): DbResult<StatementResultingChanges> {
+    public setupUser(guild: string, user: string): DbRunResult {
         return this.run(`
             INSERT OR IGNORE INTO ${TBL_USERS} (userId, guildId) VALUES (?, ?)
         `, user, guild);
