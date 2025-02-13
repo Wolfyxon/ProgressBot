@@ -1,6 +1,7 @@
 import { DatabaseSync, StatementSync, StatementResultingChanges } from "node:sqlite";
 import { getLevel, getRelativeXpForNextLevel, getTotalXpForLevel } from "./xpMath";
 import { EmbedBuilder } from "discord.js";
+import assert from "assert";
 
 const TBL_USERS = "Users";
 
@@ -80,6 +81,13 @@ export class DbUser {
             INSERT OR REPLACE INTO ${TBL_USERS} (userId, guildId, xp) VALUES (?, ?, ?)
         `).run(this.userId, this.guildId, this.xp);
     }
+
+    public reload() {
+        const res = this.db.queryRawGuildUser(this.guildId, this.userId);
+        assert(res.value, `Reload failed: User ${this.guildId}:${this.userId} doesn't exist in the database`);
+
+        this.loadData(res.value);
+    }
 } 
 
 export default class Database {
@@ -158,7 +166,7 @@ export default class Database {
 
     public queryGuildUser(guild: string, user: string): DbResult<DbUser | null> {
         const res = this.queryRawGuildUser(guild, user);
-        
+
         if(!res.value) return new DbResult<DbUser | null>(
             res.statement,
             res.value
