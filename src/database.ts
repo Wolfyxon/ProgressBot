@@ -76,6 +76,25 @@ export class DbUser {
         return this.db.userExists(this.guildId, this.userId);
     }
 
+    public queryRank(): DbResult<number | null> {
+        const res = this.db.query(
+            `SELECT RANK() OVER(
+                ORDER BY xp DESC
+            ) rank 
+            FROM ${TBL_USERS}
+            WHERE userId = ? AND guildId = ? 
+            `,
+            this.userId, this.guildId
+        );
+
+        if(!res.value) return res;
+
+        return new DbResult<number>(
+            res.statement,
+            res.value.rank!
+        )
+    }
+
     public submit() {
         this.db.db.prepare(`
             INSERT OR REPLACE INTO ${TBL_USERS} (userId, guildId, xp) VALUES (?, ?, ?)
