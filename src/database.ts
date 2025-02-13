@@ -43,16 +43,20 @@ type RawDbUser = {
 }
 
 export class DbUser {
-    userId: string
-    guildId: string
-    xp: number
+    userId: string = "";
+    guildId: string = ""
+    xp: number = 1
     db: Database
 
     constructor(data: RawDbUser, db: Database) {
+        this.db = db;
+        this.loadData(data);
+    }
+
+    public loadData(data: RawDbUser) {
         this.userId = data.userId;
         this.guildId = data.guildId;
         this.xp = data.xp;
-        this.db = db;
     }
 
     public getLevel(): number {
