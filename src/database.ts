@@ -67,6 +67,10 @@ export class DbUser {
         return getRelativeXpForNextLevel(this.getLevel());
     }
 
+    public existsInDb(): boolean {
+        return this.db.userExists(this.guildId, this.userId);
+    }
+
     public submit() {
         this.db.db.prepare(`
             INSERT OR REPLACE INTO ${TBL_USERS} (userId, guildId, xp) VALUES (?, ?, ?)
