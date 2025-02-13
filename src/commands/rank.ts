@@ -1,4 +1,4 @@
-import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import { EmbedBuilder, InteractionDeferReplyOptions, MessageFlags, SlashCommandBuilder } from "discord.js";
 import Command from "../command";
 
 export default new Command({
@@ -10,14 +10,25 @@ export default new Command({
                 .setName("user")
                 .setDescription("User to check the rank of")
                 .setRequired(false)
-                
+            )
+            .addBooleanOption(option => option
+                .setName("Ephemeral")
+                .setDescription("Should the rank be shown to everyone in the channel")
+                .setRequired(false)
             ),
     
-    run: async (ctx) => {        
-        await ctx.interaction.deferReply();
-
+    run: async (ctx) => {
         const user = ctx.interaction.options.getUser("user") ?? ctx.interaction.user;
+        const ephemeral = ctx.interaction.options.getBoolean("ephemeral");
         
+        let options: InteractionDeferReplyOptions = {};
+
+        if(ephemeral) {
+            options.flags = MessageFlags.Ephemeral;
+        }
+
+        await ctx.interaction.deferReply(options);
+
         const res = ctx.db.queryOrSetupUser(ctx.interaction.guildId!, user.id)
         const dbUser = res.user;
 
