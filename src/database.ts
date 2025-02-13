@@ -150,12 +150,19 @@ export default class Database {
         )
     }
 
-    public queryGuildUser(guild: string, user: string): DbResult<DbUser | null> {
-        const res = this.query(`
+    public queryRawGuildUser(guild: string, user: string): DbResult<RawDbUser | null> {
+        return this.query(`
             SELECT * FROM ${TBL_USERS} WHERE guildId = ? AND userId = ?
         `, guild, user);
+    }
+
+    public queryGuildUser(guild: string, user: string): DbResult<DbUser | null> {
+        const res = this.queryRawGuildUser(guild, user);
         
-        if(!res.value) return res;
+        if(!res.value) return new DbResult<DbUser | null>(
+            res.statement,
+            res.value
+        );
 
         return new DbResult<DbUser>(
             res.statement,
