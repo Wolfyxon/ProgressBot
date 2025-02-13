@@ -6,12 +6,12 @@ export default new Command({
             .setName("rank")
             .setDescription("Checks your or someone else's rank")
             
-            .addUserOption(option => option
+            .addUserOption(o => o
                 .setName("user")
                 .setDescription("User to check the rank of")
                 .setRequired(false)
             )
-            .addBooleanOption(option => option
+            .addBooleanOption(o => o
                 .setName("Ephemeral")
                 .setDescription("Should the rank be shown to everyone in the channel")
                 .setRequired(false)
@@ -36,7 +36,7 @@ export default new Command({
         const reqXp = dbUser.getXpForNextLevel();
 
         const barWidth = 16;
-        const dispXp = Math.floor(barWidth * (xp / reqXp))
+        const dispXp = Math.floor(barWidth * (xp / reqXp));
 
         let bar = "🟩".repeat(dispXp) + "⬛".repeat(barWidth - dispXp);
 
@@ -50,7 +50,7 @@ export default new Command({
                         .setDescription(`${bar} ${xp}/${reqXp}`)
                         .setFooter({
                             text: `@${user.tag} | ${user.id}`
-                        })
+                        });
 
         ctx.interaction.editReply({
             content: res.result.getCodeBlock(),
