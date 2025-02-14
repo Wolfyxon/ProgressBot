@@ -1,6 +1,6 @@
 import Database, { DbResult, DbRunResult } from "./database";
 import { getLevel, getTotalXpForLevel, getRelativeXpForNextLevel } from "../xpMath";
-import DbTable from "./table";
+import DbTable, { RowObject } from "./table";
 import assert from "assert";
 
 type RawDbUser = {
@@ -9,15 +9,13 @@ type RawDbUser = {
     xp: number
 }
 
-export class DbUser {
+export class DbUser extends RowObject<RawDbUser, Users> {
     userId: string = "";
     guildId: string = ""
-    xp: number = 1
-    tbl: Users
+    xp: number = 1;
 
     constructor(data: RawDbUser, tbl: Users) {
-        this.tbl = tbl;
-        this.loadData(data);
+        super(data, tbl);
     }
 
     public loadData(data: RawDbUser) {
