@@ -12,7 +12,7 @@ export default new Command({
                 .setRequired(false)
             )
             .addBooleanOption(o => o
-                .setName("Ephemeral")
+                .setName("ephemeral")
                 .setDescription("Should the rank be shown to everyone in the channel")
                 .setRequired(false)
             ),
