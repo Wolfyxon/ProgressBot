@@ -1,6 +1,6 @@
 import Database, { DbResult, DbRunResult } from "./database";
 import { getLevel, getTotalXpForLevel, getRelativeXpForNextLevel } from "../xpMath";
-import DbTable, { RowObject } from "./table";
+import DbTable from "./table";
 import assert from "assert";
 
 type RawDbUser = {
@@ -9,13 +9,15 @@ type RawDbUser = {
     xp: number
 }
 
-export class DbUser extends RowObject<RawDbUser, Users> {
+export class DbUser {
     userId: string = "";
     guildId: string = ""
-    xp: number = 1;
+    xp: number = 1
+    tbl: Users
 
     constructor(data: RawDbUser, tbl: Users) {
-        super(data, tbl);
+        this.tbl = tbl;
+        this.loadData(data);
     }
 
     public loadData(data: RawDbUser) {
@@ -115,7 +117,7 @@ export default class Users extends DbTable {
 
     public queryRawUser(guild: string, user: string): DbResult<RawDbUser | null> {
         return this.db.query(`
-            SELECT * FROM ${this.db} WHERE guildId = ? AND userId = ?
+            SELECT * FROM ${this.name} WHERE guildId = ? AND userId = ?
         `, guild, user);
     }
 
