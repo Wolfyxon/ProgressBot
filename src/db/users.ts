@@ -1,7 +1,7 @@
 import Database, { DbResult, DbRunResult } from "./database";
+import { getLevel, getTotalXpForLevel, getRelativeXpForNextLevel } from "../xpMath";
 import DbTable from "./table";
 import assert from "assert";
-import { getLevel, getTotalXpForLevel, getRelativeXpForNextLevel } from "../xpMath";
 
 type RawDbUser = {
     userId: string,

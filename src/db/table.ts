@@ -1,4 +1,4 @@
-import Database, { DbRunResult } from "./database";
+import Database from "./database";
 
 export default class DbTable {
     name: string;

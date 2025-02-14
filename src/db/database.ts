@@ -1,7 +1,5 @@
 import { DatabaseSync, StatementSync, StatementResultingChanges } from "node:sqlite";
-import { getLevel, getRelativeXpForNextLevel, getTotalXpForLevel } from "../xpMath";
 import { EmbedBuilder } from "discord.js";
-import assert from "assert";
 import Users from "./users";
 
 const TBL_USERS = "Users";
