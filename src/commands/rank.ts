@@ -29,7 +29,7 @@ export default new Command({
 
         await ctx.interaction.deferReply(options);
 
-        const res = ctx.db.queryOrSetupUser(ctx.interaction.guildId!, user.id)
+        const res = ctx.db.users.queryOrSetupUser(ctx.interaction.guildId!, user.id)
         const dbUser = res.user;
 
         const xp = dbUser.getLevelXp();
