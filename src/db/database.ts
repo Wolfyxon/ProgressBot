@@ -2,8 +2,6 @@ import { DatabaseSync, StatementSync, StatementResultingChanges } from "node:sql
 import { EmbedBuilder } from "discord.js";
 import Users from "./users";
 
-const TBL_USERS = "Users";
-
 export class DbResult<T> {
     statement: StatementSync
     value: T
