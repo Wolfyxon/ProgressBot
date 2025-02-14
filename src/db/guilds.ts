@@ -3,6 +3,7 @@ import DbTable from "./table";
 
 export type RawDbGuild = {
     guildId: string,
+    language: string,
     teacherRoleId?: string
 }
 
@@ -15,8 +16,8 @@ export default class Guilds extends DbTable {
         this.db.db.exec(`
             CREATE TABLE IF NOT EXISTS ${this.name} (
                 guildId VARCHAR(20) NOT NULL UNIQUE,
-                teacherRoleId VARCHAR(20),
                 language VARCHAR(5) DEFAULT "en"
+                teacherRoleId VARCHAR(20),
             )
         `);
     }
