@@ -38,7 +38,7 @@ export default new Command({
                 const amount = ctx.interaction.options.getNumber("amount", true);
                 const user = ctx.interaction.options.getUser("user", true);
 
-                const dbUser = ctx.db.getUser(ctx.interaction.guildId!, user.id);
+                const dbUser = ctx.db.users.getUser(ctx.interaction.guildId!, user.id);
                 dbUser.xp += amount;
 
                 dbUser.submit();
@@ -66,7 +66,7 @@ export default new Command({
                 members.forEach((member) => {
                     if(member.user.bot) return;
 
-                    ctx.db.setupUser(ctx.interaction.guildId!, member.id);
+                    ctx.db.users.setupUser(ctx.interaction.guildId!, member.id);
                 });
 
                 ctx.interaction.editReply("Users added");

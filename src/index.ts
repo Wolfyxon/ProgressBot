@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import { Client, Events, GatewayIntentBits } from "discord.js";
 import { getCommands } from "./command";
-import Database from "./database";
+import Database from "./db/database";
 
 console.log("Welcome to ProgressBot");
 console.log("https://github.com/Wolfyxon/ProgressBot");

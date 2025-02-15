@@ -10,7 +10,7 @@ export default new Command({
     run: async (ctx) => {
         await ctx.interaction.deferReply();
 
-        const res = ctx.db.queryLeaderboard(ctx.interaction.guildId!);
+        const res = ctx.db.users.queryLeaderboard(ctx.interaction.guildId!);
         const users = res.value;
 
         if(users.length == 0) {
