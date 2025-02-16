@@ -37,10 +37,7 @@ export default class Command {
     }
 
     public execute(interaction: ChatInputCommandInteraction, db: Database) {
-        this.data.run({
-            interaction: interaction,
-            db: db
-        });
+        this.data.run(new CommandRunContext(interaction, db));
     }
 }
 
