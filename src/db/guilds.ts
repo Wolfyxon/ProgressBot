@@ -7,6 +7,24 @@ export type RawDbGuild = {
     teacherRoleId?: string
 }
 
+export class DbGuild {
+    tbl: Guilds;
+    guildId: string = "";
+    language: string = "en";
+    teacherRoleId?: string
+
+    constructor(data: RawDbGuild, table: Guilds) {
+        this.tbl = table;
+        this.loadData(data);
+    }
+
+    public loadData(data: RawDbGuild) {
+        this.guildId = data.guildId;
+        this.language = data.language;
+        this.teacherRoleId = data.teacherRoleId;
+    }
+} 
+
 export default class Guilds extends DbTable {
     constructor(db: Database) {
         super("Guilds", db);
