@@ -1,4 +1,4 @@
-import Database from "./database";
+import Database, { DbResult } from "./database";
 import DbTable from "./table";
 
 export type RawDbGuild = {
@@ -38,5 +38,16 @@ export default class Guilds extends DbTable {
                 teacherRoleId VARCHAR(20),
             )
         `);
+    }
+
+    public queryGuild(guildId: string): DbResult<DbGuild | null> {
+        const res = this.db.query(`SELECT * FROM ${this.name} WHERE guildId = ?`, guildId);
+
+        if(!res.value) return res;
+
+        return new DbResult(
+            res.statement,
+            new DbGuild(res.value as RawDbGuild, this)
+        );
     }
 }
