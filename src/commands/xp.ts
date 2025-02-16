@@ -1,36 +1,37 @@
 import { SlashCommandBuilder } from "discord.js";
 import Command from "../command";
 
-export default new Command({
-    builder: new SlashCommandBuilder()
-            .setName("xp")
-            .setDescription("Manage user XP")
-            
-            .addSubcommand(cmd => 
-                cmd
-                    .setName("add")
-                    .setDescription("Add XP")
+export default new Command()
+    .setBuilder(
+        new SlashCommandBuilder()
+        .setName("xp")
+        .setDescription("Manage user XP")
+        
+        .addSubcommand(cmd => 
+            cmd
+                .setName("add")
+                .setDescription("Add XP")
 
-                    .addUserOption(option =>
-                        option
-                            .setName("user")
-                            .setDescription("User to add XP to")
-                            .setRequired(true)
-                    )
-                    .addNumberOption(option => 
-                        option
-                            .setName("amount")
-                            .setDescription("Amount of XP to add")
-                            .setRequired(true)
-                    )
-            )
-            .addSubcommand(cmd => 
-                cmd
-                    .setName("setup")
-                    .setDescription("Sets up all users in the server") 
-            ),
-    
-    run: async (ctx) => {
+                .addUserOption(option =>
+                    option
+                        .setName("user")
+                        .setDescription("User to add XP to")
+                        .setRequired(true)
+                )
+                .addNumberOption(option => 
+                    option
+                        .setName("amount")
+                        .setDescription("Amount of XP to add")
+                        .setRequired(true)
+                )
+        )
+        .addSubcommand(cmd => 
+            cmd
+                .setName("setup")
+                .setDescription("Sets up all users in the server") 
+        )
+    )
+    .setRun(async (ctx) => {
         await ctx.interaction.deferReply();
 
         switch (ctx.interaction.options.getSubcommand(true)) {
@@ -77,5 +78,4 @@ export default new Command({
                 ctx.interaction.editReply("The bot pooped itself");
             }
         }
-    }
-});
+    });

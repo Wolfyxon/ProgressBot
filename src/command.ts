@@ -3,10 +3,7 @@ import { ChatInputCommandInteraction, REST, Routes, SlashCommandBuilder, SlashCo
 import * as fs from "fs";
 import Database from "./db/database";
 
-type CommandData = {
-    builder: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder | SlashCommandSubcommandsOnlyBuilder,
-    run: (ctx: CommandRunContext) => void
-};
+export type UniversalCommandBuilder = SlashCommandBuilder | SlashCommandOptionsOnlyBuilder | SlashCommandSubcommandsOnlyBuilder;
 
 export class CommandRunContext {
     interaction: ChatInputCommandInteraction;
@@ -26,18 +23,21 @@ export class CommandRunContext {
 const COMMAND_DIR = "src/commands";
 
 export default class Command {
-    public data: CommandData
+    private run?: (ctx: CommandRunContext) => void;
+    public builder?: UniversalCommandBuilder;
 
-    constructor(data: CommandData) {
-        assert(data.builder.description, "Command description must be specified");
-        
-        // TODO: Also check options
-        
-        this.data = data;
+    public setRun(callback: (ctx: CommandRunContext) => void): Command {
+        this.run = callback;
+        return this;
+    }
+
+    public setBuilder(builder: UniversalCommandBuilder): Command {
+        this.builder = builder;
+        return this;
     }
 
     public execute(interaction: ChatInputCommandInteraction, db: Database) {
-        this.data.run(new CommandRunContext(interaction, db));
+        this.run!(new CommandRunContext(interaction, db));
     }
 }
 
@@ -53,7 +53,7 @@ export async function registerGuildCommands(client: string, guild: string) {
     console.log(`Deploying commands in guild: ${guild}...`);
     
     const cmds = await getCommands();
-    const body = cmds.map(cmd => cmd.data.builder.toJSON());
+    const body = cmds.map(cmd => cmd.builder!.toJSON());
 
     const rest = new REST().setToken(process.env.DISCORD_TOKEN!);
 

@@ -1,8 +1,9 @@
 import { EmbedBuilder, InteractionDeferReplyOptions, MessageFlags, SlashCommandBuilder } from "discord.js";
 import Command from "../command";
 
-export default new Command({
-    builder: new SlashCommandBuilder()
+export default new Command()
+    .setBuilder(
+        new SlashCommandBuilder()
             .setName("rank")
             .setDescription("Checks your or someone else's rank")
             
@@ -15,9 +16,9 @@ export default new Command({
                 .setName("ephemeral")
                 .setDescription("Should the rank be shown to everyone in the channel")
                 .setRequired(false)
-            ),
-    
-    run: async (ctx) => {
+            )
+    )
+    .setRun(async (ctx) => {
         const user = ctx.interaction.options.getUser("user") ?? ctx.interaction.user;
         const ephemeral = ctx.interaction.options.getBoolean("ephemeral");
         
@@ -55,6 +56,5 @@ export default new Command({
         ctx.interaction.editReply({
             content: res.result.getCodeBlock(),
             embeds: [embed]
-        });
-    }
-});
+        })
+    });

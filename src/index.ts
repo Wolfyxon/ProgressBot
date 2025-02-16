@@ -31,7 +31,7 @@ async function main() {
         if (!interaction.isChatInputCommand()) return;
 
         for(const cmd of commands) {
-            if(cmd.data.builder.name == interaction.commandName) {
+            if(cmd.builder!.name == interaction.commandName) {
                 cmd.execute(interaction, db);
                 break;
             }
