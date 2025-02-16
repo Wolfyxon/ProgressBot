@@ -11,7 +11,7 @@ export class DbGuild {
     tbl: Guilds;
     guildId: string = "";
     language: string = "en";
-    teacherRoleId?: string
+    teacherRoleId?: string;
 
     constructor(data: RawDbGuild, table: Guilds) {
         this.tbl = table;
