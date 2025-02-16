@@ -16,6 +16,11 @@ export class CommandRunContext {
         this.interaction = interaction;
         this.db = db;
     }
+
+    public getLang(): string {
+        const guild = this.db.guilds.queryOrSetupGuild(this.interaction.guildId!).guild;
+        return guild.language;
+    }
 }
 
 const COMMAND_DIR = "src/commands";
