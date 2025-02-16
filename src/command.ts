@@ -8,9 +8,14 @@ type CommandData = {
     run: (ctx: CommandRunContext) => void
 };
 
-type CommandRunContext = {
-    interaction: ChatInputCommandInteraction,
+export class CommandRunContext {
+    interaction: ChatInputCommandInteraction;
     db: Database
+
+    constructor(interaction: ChatInputCommandInteraction, db: Database) {
+        this.interaction = interaction;
+        this.db = db;
+    }
 }
 
 const COMMAND_DIR = "src/commands";
