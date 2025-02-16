@@ -51,6 +51,27 @@ export default class Guilds extends DbTable {
         );
     }
 
+    public queryOrSetupGuild(guildId: string): { guild: DbGuild, result: DbResult<DbGuild> | DbRunResult } {
+        const setup = this.setupGuild(guildId);
+
+        if(setup.hasChanges()) {
+            return {
+                guild: new DbGuild({
+                    guildId: guildId,
+                    language: "en"
+                }, this),
+                result: setup
+            }
+        }
+
+        const query = this.queryGuild(guildId);
+
+        return {
+            guild: query.value as DbGuild,
+            result: query as DbResult<DbGuild>
+        };
+    }
+
     public setupGuild(guildId: string): DbRunResult {
         return this.db.run(`INSERT OR IGNORE INTO ${this.name} (guildId) VALUES (?)`, guildId);
     }
