@@ -1,4 +1,4 @@
-import Database, { DbResult } from "./database";
+import Database, { DbResult, DbRunResult } from "./database";
 import DbTable from "./table";
 
 export type RawDbGuild = {
@@ -49,5 +49,9 @@ export default class Guilds extends DbTable {
             res.statement,
             new DbGuild(res.value as RawDbGuild, this)
         );
+    }
+
+    public setupGuild(guildId: string): DbRunResult {
+        return this.db.run(`INSERT OR IGNORE INTO ${this.name} (guildId) VALUES (?)`, guildId);
     }
 }
