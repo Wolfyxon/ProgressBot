@@ -29,6 +29,12 @@ export class DbGuild {
             `UPDATE ${this.tbl.name} SET language = ? WHERE guildId = ?`
         , lang, this.guildId);
     }
+
+    public setTeacherRole(id: string): DbRunResult {
+        return this.tbl.db.run(
+            `UPDATE ${this.tbl.name} SET teacherRoleId = ? WHERE guildId = ?`
+        , id, this.guildId);
+    }
 } 
 
 export default class Guilds extends DbTable {
