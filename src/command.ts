@@ -5,6 +5,11 @@ import Database from "./db/database";
 
 export type UniversalCommandBuilder = SlashCommandBuilder | SlashCommandOptionsOnlyBuilder | SlashCommandSubcommandsOnlyBuilder;
 
+export type TranslationTable = {
+    [key: string]: string, 
+    en: string
+};
+
 export class CommandRunContext {
     interaction: ChatInputCommandInteraction;
     db: Database
@@ -23,6 +28,10 @@ export class CommandRunContext {
         this.lang = guild.language;
         
         return guild.language;
+    }
+
+    public getTranslation(translations: TranslationTable): string {
+        return translations[this.getLang()];
     }
 }
 
