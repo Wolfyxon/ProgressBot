@@ -7,6 +7,9 @@ export default new Command()
         new SlashCommandBuilder()
             .setName("leaderboard")
             .setDescription("Shows the best members")
+            .setDescriptionLocalizations({
+                pl: "Pokazuje najlepszych członków"
+            })
     )
     .setRun(async (ctx) => {
         await ctx.interaction.deferReply();

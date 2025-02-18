@@ -5,23 +5,46 @@ export default new Command()
     .setBuilder(
         new SlashCommandBuilder()
         .setName("xp")
+        
         .setDescription("Manage user XP")
+        .setDescriptionLocalizations({
+            pl: "Zarządzaj XP użytkowników"
+        })
         
         .addSubcommand(cmd => 
             cmd
                 .setName("add")
                 .setDescription("Add XP")
+                .setDescriptionLocalizations({
+                    pl: "Dodaj XP"
+                })
 
                 .addUserOption(option =>
                     option
                         .setName("user")
+                        .setNameLocalizations({
+                            pl: "użytkownik"
+                        })
+
                         .setDescription("User to add XP to")
+                        .setDescriptionLocalizations({
+                            pl: "Użytkownik, który ma otrzymać XP"
+                        })
+
                         .setRequired(true)
                 )
                 .addNumberOption(option => 
                     option
                         .setName("amount")
+                        .setNameLocalizations({
+                            pl: "ilość"
+                        })
+
                         .setDescription("Amount of XP to add")
+                        .setDescriptionLocalizations({
+                            pl: "Ilość XP do dodania"
+                        })
+                        
                         .setRequired(true)
                 )
         )

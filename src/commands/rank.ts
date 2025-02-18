@@ -6,15 +6,34 @@ export default new Command()
         new SlashCommandBuilder()
             .setName("rank")
             .setDescription("Checks your or someone else's rank")
+            .setDescriptionLocalizations({
+                pl: "Sprawdź swoją lub czyjąś rangę"
+            })
             
             .addUserOption(o => o
                 .setName("user")
+                .setNameLocalizations({
+                    pl: "użytkownik"
+                })
+
                 .setDescription("User to check the rank of")
+                .setDescriptionLocalizations({
+                    pl: "Użytkownik któremu chcesz sprawdzić rangę"
+                })
+
                 .setRequired(false)
             )
             .addBooleanOption(o => o
                 .setName("ephemeral")
-                .setDescription("Should the rank be shown to everyone in the channel")
+                .setNameLocalizations({
+                    pl: "niewidzialna"
+                })
+
+                .setDescription("Should the rank be shown only to you")
+                .setDescriptionLocalizations({
+                    pl: "Czy ranga ma być pokazana tylko Tobie"
+                })
+                
                 .setRequired(false)
             )
     )
