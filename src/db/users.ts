@@ -11,9 +11,9 @@ type RawDbUser = {
 
 export class DbUser {
     userId: string = "";
-    guildId: string = ""
-    xp: number = 1
-    tbl: Users
+    guildId: string = "";
+    xp: number = 1;
+    tbl: Users;
 
     constructor(data: RawDbUser, tbl: Users) {
         this.tbl = tbl;
