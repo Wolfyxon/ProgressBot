@@ -1,4 +1,4 @@
-import { EmbedBuilder, SlashCommandBuilder, User } from "discord.js";
+import { EmbedBuilder, GuildMember, SlashCommandBuilder, User } from "discord.js";
 import Command from "../command";
 
 export default new Command()
@@ -33,6 +33,15 @@ export default new Command()
     )
     .setRun(async (ctx) => {
         await ctx.interaction.deferReply();
+
+        if(!ctx.getDbGuild().isTeacher(ctx.interaction.member! as GuildMember)) {
+            ctx.interaction.editReply(":x: " + ctx.getTranslation({
+                en: "You're not a teacher!",
+                pl: "Nie jesteś nauczycielem!"
+            }));
+            
+            return;
+        }
 
         function checkUser(user: User): boolean {
             if(user.bot) {
