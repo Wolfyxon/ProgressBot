@@ -1,3 +1,4 @@
+import { GuildMember } from "discord.js";
 import Database, { DbResult, DbRunResult } from "./database";
 import DbTable from "./table";
 
@@ -22,6 +23,12 @@ export class DbGuild {
         this.guildId = data.guildId;
         this.language = data.language;
         this.teacherRoleId = data.teacherRoleId;
+    }
+
+    public isTeacher(member: GuildMember): boolean {
+        if(!this.teacherRoleId) return false;
+
+        member.roles.cache.has(this.teacherRoleId);
     }
 
     public setLanguage(lang: string): DbRunResult {
