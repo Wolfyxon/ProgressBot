@@ -2,6 +2,7 @@ import assert from "assert";
 import { ChatInputCommandInteraction, REST, Routes, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from "discord.js";
 import * as fs from "fs";
 import Database from "./db/database";
+import { DbGuild } from "./db/guilds";
 
 export type UniversalCommandBuilder = SlashCommandBuilder | SlashCommandOptionsOnlyBuilder | SlashCommandSubcommandsOnlyBuilder;
 
@@ -21,10 +22,14 @@ export class CommandRunContext {
         this.db = db;
     }
 
+    public getDbGuild(): DbGuild {
+        return this.db.guilds.queryOrSetupGuild(this.interaction.guildId!).guild;
+    }
+
     public getLang(): string {
         if(this.lang) return this.lang;
 
-        const guild = this.db.guilds.queryOrSetupGuild(this.interaction.guildId!).guild;
+        const guild = this.getDbGuild();
         this.lang = guild.language;
         
         return guild.language;
