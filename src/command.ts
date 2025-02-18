@@ -1,4 +1,3 @@
-import assert from "assert";
 import { ChatInputCommandInteraction, REST, Routes, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from "discord.js";
 import * as fs from "fs";
 import Database from "./db/database";
@@ -13,7 +12,7 @@ export type TranslationTable = {
 
 export class CommandRunContext {
     interaction: ChatInputCommandInteraction;
-    db: Database
+    db: Database;
 
     private lang?: string
 
