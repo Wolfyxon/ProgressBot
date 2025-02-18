@@ -28,7 +28,7 @@ export class DbGuild {
     public isTeacher(member: GuildMember): boolean {
         if(!this.teacherRoleId) return false;
 
-        member.roles.cache.has(this.teacherRoleId);
+        return member.roles.cache.has(this.teacherRoleId);
     }
 
     public setLanguage(lang: string): DbRunResult {
