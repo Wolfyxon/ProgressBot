@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from "discord.js";
+import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import Command from "../command";
 
 export default new Command()
@@ -40,14 +40,22 @@ export default new Command()
                 const user = ctx.interaction.options.getUser("user", true);
 
                 const dbUser = ctx.db.users.getUser(ctx.interaction.guildId!, user.id);
-                dbUser.xp += amount;
+                const res = dbUser.addXp(amount);
 
-                dbUser.submit();
+                const mention = `<@${user.id}>`;
 
-                ctx.interaction.editReply(ctx.getTranslation({
-                    en: `Added \`${amount}\` XP to **${user.displayName}**`,
-                    pl: `Przyznano \`${amount}\` XP dla **${user.displayName}**`
-                }));
+                const text = ctx.getTranslation({
+                    en: `Added \`${amount}\` XP to ${mention}`,
+                    pl: `Przyznano \`${amount}\` XP, ${mention}`
+                });
+
+                ctx.interaction.editReply({
+                    content: res.getCodeBlock(),
+                    embeds: [
+                        new EmbedBuilder()
+                            .setDescription(`:white_check_mark: ${text}`)
+                    ]
+                });
 
                 break;
             }
