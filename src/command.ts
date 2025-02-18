@@ -31,7 +31,7 @@ export class CommandRunContext {
     }
 
     public getTranslation(translations: TranslationTable): string {
-        return translations[this.getLang()];
+        return translations[this.getLang()] ?? translations.en;
     }
 }
 
