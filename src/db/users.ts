@@ -67,6 +67,12 @@ export class DbUser {
         `).run(this.userId, this.guildId, this.xp);
     }
 
+    public addXp(xp: number): DbRunResult {
+        return this.tbl.db.run(
+            `UPDATE ${this.tbl.name} SET xp = xp + ? WHERE userId = ?`
+        , xp, this.userId);
+    }
+
     public reload() {
         const res = this.tbl.queryRawUser(this.guildId, this.userId);
         assert(res.value, `Reload failed: User ${this.guildId}:${this.userId} doesn't exist in the database`);
