@@ -9,13 +9,19 @@ export class CommandRunContext {
     interaction: ChatInputCommandInteraction;
     db: Database
 
+    private lang?: string
+
     constructor(interaction: ChatInputCommandInteraction, db: Database) {
         this.interaction = interaction;
         this.db = db;
     }
 
     public getLang(): string {
+        if(this.lang) return this.lang;
+
         const guild = this.db.guilds.queryOrSetupGuild(this.interaction.guildId!).guild;
+        this.lang = guild.language;
+        
         return guild.language;
     }
 }
