@@ -51,7 +51,7 @@ export default class Database {
         this.guilds.setup();
     }
 
-    public queryAll(sql: string, ...params: string[]): DbResult<any[]> {
+    public queryAll(sql: string, ...params: any[]): DbResult<any[]> {
         const q = this.db.prepare(sql);
         
         return new DbResult<any[]>(
@@ -60,7 +60,7 @@ export default class Database {
         );
     }
 
-    public query(sql: string, ...params: string[]): DbResult<any> {
+    public query(sql: string, ...params: any[]): DbResult<any> {
         const q = this.db.prepare(sql);
 
         return new DbResult<any>(
@@ -69,7 +69,7 @@ export default class Database {
         );
     }
 
-    public run(sql: string, ...params: string[]): DbRunResult {
+    public run(sql: string, ...params: any[]): DbRunResult {
         const q = this.db.prepare(sql);
 
         return new DbRunResult(
