@@ -44,7 +44,10 @@ export default new Command()
 
                 dbUser.submit();
 
-                ctx.interaction.editReply(`Added ${amount} XP to ${user.displayName}`);
+                ctx.interaction.editReply(ctx.getTranslation({
+                    en: `Added \`${amount}\` XP to **${user.displayName}**`,
+                    pl: `Przyznano \`${amount}\` XP dla **${user.displayName}**`
+                }));
 
                 break;
             }
