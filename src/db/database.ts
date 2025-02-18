@@ -48,6 +48,7 @@ export default class Database {
     
     public setup() {
         this.users.setup();
+        this.guilds.setup();
     }
 
     public queryAll(sql: string, ...params: string[]): DbResult<any[]> {
