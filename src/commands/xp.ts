@@ -1,4 +1,4 @@
-import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import { EmbedBuilder, SlashCommandBuilder, User } from "discord.js";
 import Command from "../command";
 
 export default new Command()
@@ -34,10 +34,25 @@ export default new Command()
     .setRun(async (ctx) => {
         await ctx.interaction.deferReply();
 
+        function checkUser(user: User): boolean {
+            if(user.bot) {
+                ctx.interaction.editReply(":x: " + ctx.getTranslation({
+                    en: "This user is a bot",
+                    pl: "Ten użytkownik jest botem"
+                }));
+
+                return true;
+            }
+
+            return false;
+        }
+
         switch (ctx.interaction.options.getSubcommand(true)) {
             case "add": {
                 const amount = ctx.interaction.options.getNumber("amount", true);
                 const user = ctx.interaction.options.getUser("user", true);
+
+                if(checkUser(user)) return;
 
                 const dbUser = ctx.db.users.getUser(ctx.interaction.guildId!, user.id);
                 const res = dbUser.addXp(amount);
