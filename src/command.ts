@@ -10,6 +10,18 @@ const COMMAND_DIR = "src/commands";
 export default class Command {
     private run?: (ctx: CommandRunContext) => void;
     public builder?: UniversalCommandBuilder;
+    public teacherOnly: boolean = false;
+    public devOnly = false;
+
+    public makeTeacherOnly(): this {
+        this.teacherOnly = true;
+        return this;
+    }
+
+    public makeDevOnly(): this {
+        this.devOnly = true;
+        return this;
+    }
 
     public setRun(callback: (ctx: CommandRunContext) => void): Command {
         this.run = callback;
