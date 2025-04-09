@@ -23,12 +23,12 @@ export default class Command {
         return this;
     }
 
-    public setRun(callback: (ctx: CommandRunContext) => void): Command {
+    public setRun(callback: (ctx: CommandRunContext) => void): this {
         this.run = callback;
         return this;
     }
 
-    public setBuilder(builder: UniversalCommandBuilder): Command {
+    public setBuilder(builder: UniversalCommandBuilder): this {
         this.builder = builder;
         return this;
     }
