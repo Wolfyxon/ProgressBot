@@ -2,6 +2,7 @@ import { DatabaseSync, StatementSync, StatementResultingChanges } from "node:sql
 import { EmbedBuilder } from "discord.js";
 import Users from "./users";
 import Guilds from "./guilds";
+import BotContext from "../botContext";
 
 export class DbResult<T> {
     statement: StatementSync
@@ -30,11 +31,13 @@ export class DbRunResult extends DbResult<StatementResultingChanges> {
 }
 
 export default class Database {
+    public botCtx: BotContext
     public db: DatabaseSync;
     public users: Users;
     public guilds: Guilds;
     
-    constructor(file?: string) {
+    constructor(context: BotContext, file?: string) {
+        this.botCtx = context;
         this.db = new DatabaseSync(file ?? "data.db");
         this.users = new Users(this);
         this.guilds = new Guilds(this);
