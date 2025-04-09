@@ -12,6 +12,10 @@ export class Config {
     constructor(data: ConfigData) {
         this.data = data;
     }
+
+    public isDev(userId: string): boolean {
+        return this.data.developers.includes(userId);
+    }
 }
 
 export function defaultConfig(): Config {
