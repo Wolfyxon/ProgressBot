@@ -1,8 +1,8 @@
 import { DatabaseSync, StatementSync, StatementResultingChanges } from "node:sqlite";
-import { EmbedBuilder } from "discord.js";
 import Users from "./users";
 import Guilds from "./guilds";
 import BotContext from "../botContext";
+import { cleanStr } from "../utils";
 
 export class DbResult<T> {
     statement: StatementSync
@@ -14,7 +14,7 @@ export class DbResult<T> {
     }
 
     public getSql(): string {
-        return this.statement.expandedSQL.trim();
+        return cleanStr(this.statement.expandedSQL);
     }
 
     public getCodeBlock(): string {
