@@ -2,6 +2,7 @@ import { ChatInputCommandInteraction, REST, Routes, SlashCommandBuilder, SlashCo
 import * as fs from "fs";
 import Database from "./db/database";
 import { CommandRunContext } from "./commandContext";
+import BotContext from "./botContext";
 
 export type UniversalCommandBuilder = SlashCommandBuilder | SlashCommandOptionsOnlyBuilder | SlashCommandSubcommandsOnlyBuilder;
 
@@ -33,8 +34,8 @@ export default class Command {
         return this;
     }
 
-    public execute(interaction: ChatInputCommandInteraction, db: Database) {
-        this.run!(new CommandRunContext(interaction, db));
+    public execute(interaction: ChatInputCommandInteraction, ctx: BotContext) {
+        this.run!(new CommandRunContext(interaction, ctx));
     }
 }
 

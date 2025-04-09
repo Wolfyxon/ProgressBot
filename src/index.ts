@@ -38,7 +38,7 @@ async function main() {
 
         for(const cmd of commands) {
             if(cmd.builder!.name == interaction.commandName) {
-                cmd.execute(interaction, db);
+                cmd.execute(interaction, botCtx);
                 break;
             }
         }

@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction, Interaction } from "discord.js";
 import Database from "./db/database";
 import { DbGuild } from "./db/guilds";
+import BotContext from "./botContext";
 
 export type TranslationTable = {
     [key: string]: string, 
@@ -9,13 +10,15 @@ export type TranslationTable = {
 
 export class CommandContext {
     interaction: Interaction;
+    botCtx: BotContext;
     db: Database;
 
     private lang?: string
 
-    constructor(interaction: Interaction, db: Database) {
+    constructor(interaction: Interaction, botCtx: BotContext) {
         this.interaction = interaction;
-        this.db = db;
+        this.botCtx = botCtx;
+        this.db = botCtx.db!;
     }
 
     public getDbGuild(): DbGuild {
@@ -39,8 +42,8 @@ export class CommandContext {
 export class CommandRunContext extends CommandContext {
     interaction: ChatInputCommandInteraction;
 
-    constructor(interaction: ChatInputCommandInteraction, db: Database) {
-        super(interaction, db);
+    constructor(interaction: ChatInputCommandInteraction, botCtx: BotContext) {
+        super(interaction, botCtx);
         this.interaction = interaction;
     }
 }
