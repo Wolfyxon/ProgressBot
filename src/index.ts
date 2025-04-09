@@ -3,6 +3,7 @@ import { Client, Events, GatewayIntentBits } from "discord.js";
 import { getCommands } from "./command";
 import Database from "./db/database";
 import BotContext from "./botContext";
+import { getConfig } from "./config";
 
 console.log("Welcome to ProgressBot");
 console.log("https://github.com/Wolfyxon/ProgressBot");
@@ -14,11 +15,11 @@ const TOKEN: string = process.env["DISCORD_TOKEN"]!;
 async function main() {
     const commands = await getCommands();
 
+    const config = getConfig();
     const botCtx = new BotContext();
 
     const db = new Database(botCtx);
     db.setup();
-    botCtx.db = db;
 
     const client = new Client({
         intents: [
@@ -43,7 +44,10 @@ async function main() {
         }
     });
     
+    botCtx.config = config;
     botCtx.client = client;
+    botCtx.db = db;
+
     client.login(TOKEN);
 }
 
