@@ -2,6 +2,7 @@ import Database, { DbResult, DbRunResult } from "./database";
 import { getLevel, getTotalXpForLevel, getRelativeXpForNextLevel } from "../xpMath";
 import DbTable from "./table";
 import assert from "assert";
+import { DbGuild } from "./guilds";
 
 type RawDbUser = {
     userId: string,
@@ -136,8 +137,15 @@ export default class Users extends DbTable {
     }
 
     public queryLeaderboard(guild: string, length?: number): DbResult<DbUser[]> {
+        const dbGuild = this.db.guilds.queryOrSetupGuild(guild).result.value as DbGuild;
+        const teacherIds = dbGuild.getTeachers().map(m => m.id);
+
         const res = this.db.queryAll(`
-            SELECT * FROM ${this.name} WHERE guildId = ? AND xp != 0 ORDER BY xp DESC LIMIT ${length ?? 20} 
+            SELECT * FROM ${this.name} 
+            WHERE guildId = ? 
+            AND xp != 0 
+            AND userId NOT IN (${teacherIds.toString()}) 
+            ORDER BY xp DESC LIMIT ${length ?? 20} 
         `, guild);
 
         return new DbResult<DbUser[]>(
