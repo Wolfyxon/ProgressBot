@@ -137,7 +137,7 @@ export default class Users extends DbTable {
 
     public queryLeaderboard(guild: string, length?: number): DbResult<DbUser[]> {
         const res = this.db.queryAll(`
-            SELECT * FROM ${this.name} WHERE guildId = ? ORDER BY xp DESC LIMIT ${length ?? 20} 
+            SELECT * FROM ${this.name} WHERE guildId = ? AND xp != 0 ORDER BY xp DESC LIMIT ${length ?? 20} 
         `, guild);
 
         return new DbResult<DbUser[]>(
