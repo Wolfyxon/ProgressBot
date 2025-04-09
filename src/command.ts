@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, REST, Routes, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from "discord.js";
+import { ChatInputCommandInteraction, MessageFlags, REST, Routes, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from "discord.js";
 import * as fs from "fs";
 import Database from "./db/database";
 import { CommandRunContext } from "./commandContext";
@@ -35,6 +35,15 @@ export default class Command {
     }
 
     public execute(interaction: ChatInputCommandInteraction, ctx: BotContext) {
+        if(this.devOnly && !ctx.config!.isDev(interaction.user.id)) {
+            interaction.reply({
+                content: ":x: You're not a developer",
+                flags: MessageFlags.Ephemeral
+            });
+            
+            return;
+        }
+
         this.run!(new CommandRunContext(interaction, ctx));
     }
 }
