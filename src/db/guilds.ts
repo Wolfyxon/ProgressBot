@@ -31,7 +31,8 @@ export class DbGuild {
         return member.roles.cache.has(this.teacherRoleId);
     }
 
-    public getTeachers(guild: Guild): GuildMember[] {
+    public getTeachers(): GuildMember[] {
+        const guild = this.tbl.db.botCtx.client?.guilds.cache.get(this.guildId)!;
         const res: GuildMember[] = [];
 
         const roleId = this.teacherRoleId;
