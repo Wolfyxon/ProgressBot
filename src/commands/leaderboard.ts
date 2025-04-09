@@ -28,7 +28,7 @@ export default new Command()
             ":third_place:"
         ];
         
-        const description = users.map((user, i) => {
+        const lines = users.map((user, i) => {
             const prefix = emojis[i] ?? "#" + (i + 1);
             const level = user.getLevel();
             const xp = user.getLevelXp();
@@ -39,10 +39,9 @@ export default new Command()
 
         const embed = new EmbedBuilder()
             .setTitle(":trophy: Leaderboard")
-            .setDescription(description.join("\n"))
+            .setDescription(lines.join("\n") + res.getCodeBlock())
 
         ctx.interaction.editReply({
-            content: res.getCodeBlock(),
             embeds: [embed]
         });
     });

@@ -67,13 +67,12 @@ export default new Command()
                         })
                         .setTitle(`Level ${dbUser.getLevel()}`)
                         .setThumbnail(user.displayAvatarURL())
-                        .setDescription(`${bar} ${xp}/${reqXp}`)
+                        .setDescription(`${bar} ${xp}/${reqXp} ${res.result.getCodeBlock()}`)
                         .setFooter({
                             text: `@${user.tag} | ${user.id}`
                         });
 
         ctx.interaction.editReply({
-            content: res.result.getCodeBlock(),
             embeds: [embed]
         })
     });

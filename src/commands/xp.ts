@@ -114,10 +114,9 @@ export default new Command()
                 });
 
                 ctx.interaction.editReply({
-                    content: res.getCodeBlock(),
                     embeds: [
                         new EmbedBuilder()
-                            .setDescription(`:white_check_mark: ${text}`)
+                            .setDescription(`:white_check_mark: ${text} ${res.getCodeBlock()}`)
                     ]
                 });
 
