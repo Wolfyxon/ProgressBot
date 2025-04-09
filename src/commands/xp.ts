@@ -152,6 +152,10 @@ export default new Command()
                     return;
                 }
 
+                channel.members.forEach(m => {
+                    ctx.db.users.setupUser(m.guild.id, m.user.id);
+                });
+
                 ctx.db.users.incrementXp(ctx.interaction.guildId, channel.members.map(m => m.id), xp);
                 
                 ctx.interaction.editReply(ctx.getTranslation({
