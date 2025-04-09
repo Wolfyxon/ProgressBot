@@ -63,10 +63,10 @@ export default new Command()
         const embed = new EmbedBuilder()
                         .setAuthor({
                             name: user.displayName,
-                            iconURL: user.avatarURL() ?? ""
+                            iconURL: user.displayAvatarURL()
                         })
                         .setTitle(`Level ${dbUser.getLevel()}`)
-                        .setThumbnail(user.avatarURL())
+                        .setThumbnail(user.displayAvatarURL())
                         .setDescription(`${bar} ${xp}/${reqXp}`)
                         .setFooter({
                             text: `@${user.tag} | ${user.id}`
