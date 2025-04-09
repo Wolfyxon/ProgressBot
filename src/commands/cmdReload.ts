@@ -4,9 +4,10 @@ import Command, { registerGuildCommands } from "../command";
 export default new Command()
     .setBuilder(
         new SlashCommandBuilder()
-            .setName("reload")
+            .setName("cmdreload")
             .setDescription("Reloads commands in the current server")
     )
+    .makeDevOnly()
     .setRun(async (ctx) => {
         await ctx.interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
