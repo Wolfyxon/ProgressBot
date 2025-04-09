@@ -8,3 +8,20 @@ export function limitStr(str: string, charLimit: number) {
 
     return str;
 }
+
+// TODO: Handle words longer than the lineLength
+export function wordWrap(str: string, lineLength: number): string {
+    let lines: string[] = [];
+    let line = "";
+
+    str.split(" ").forEach((word) => {
+        if(line.length >= lineLength) {
+            lines.push(line);
+            line = "";
+        }
+
+        line += word + " ";
+    });
+
+    return lines.join("\n");
+}
