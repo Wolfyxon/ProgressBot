@@ -50,6 +50,23 @@ export default new Command()
         )
         .addSubcommand(cmd => 
             cmd
+                .setName("addall")
+                .setDescription("Gives XP to all users in the same voice channel or a stage as you")
+                .setDescriptionLocalizations({
+                    pl: "Dodaje XP wszystkim użytkownikom w tym samym kanale głosowym lub scenie co ty"
+                })
+                .addNumberOption(opt =>
+                    opt
+                        .setName("amount")
+                        .setRequired(true)
+                        .setDescription("The amount of XP to give")
+                        .setDescriptionLocalizations({
+                            pl: "Ilość XP do dodania"
+                        })
+                )
+        )
+        .addSubcommand(cmd => 
+            cmd
                 .setName("setup")
                 .setDescription("Sets up all users in the server") 
         )
@@ -103,6 +120,44 @@ export default new Command()
                             .setDescription(`:white_check_mark: ${text}`)
                     ]
                 });
+
+                break;
+            }
+
+            case "addall": {
+                if (!ctx.interaction.inCachedGuild()) {
+                    ctx.interaction.editReply("This server doesn't seem to be cached, try again later");
+                    return;
+                }
+                
+                const xp = ctx.interaction.options.getNumber("amount")!;
+                const voice = ctx.interaction.member.voice;
+                const channel = voice?.channel;
+                
+                if (!voice) {
+                    ctx.interaction.editReply(ctx.getTranslation({
+                        en: "Failed to get your voice state",
+                        pl: "Błąd przy uzyskiwaniu twojego stanu głosowego"
+                    }));
+
+                    return;
+                }
+
+                if (!channel) {
+                    ctx.interaction.editReply(ctx.getTranslation({
+                        en: "You need to be in a voice channel",
+                        pl: "Musisz być na kanale głosowym"
+                    }));
+
+                    return;
+                }
+
+                ctx.db.users.incrementXp(ctx.interaction.guildId, channel.members.map(m => m.id), xp);
+                
+                ctx.interaction.editReply(ctx.getTranslation({
+                    en: `Granted **${xp}** XP to ${channel.members.size} users`,
+                    pl: `Przyznano **${xp}** XP ${channel.members.size} użytkownikom`
+                }));
 
                 break;
             }
