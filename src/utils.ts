@@ -1,4 +1,4 @@
-export function limitStr(str: string, charLimit: number) {
+export function limitStr(str: string, charLimit: number): string {
     const suffix = "...";
     const trimmed = str.substring(0, charLimit - suffix.length);
     
