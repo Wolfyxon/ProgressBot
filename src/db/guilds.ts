@@ -1,4 +1,4 @@
-import { GuildMember } from "discord.js";
+import { Guild, GuildMember } from "discord.js";
 import Database, { DbResult, DbRunResult } from "./database";
 import DbTable from "./table";
 
@@ -29,6 +29,22 @@ export class DbGuild {
         if(!this.teacherRoleId) return false;
 
         return member.roles.cache.has(this.teacherRoleId);
+    }
+
+    public getTeachers(guild: Guild): GuildMember[] {
+        const res: GuildMember[] = [];
+
+        const roleId = this.teacherRoleId;
+
+        if (roleId) {
+            const role = guild.roles.cache.get(roleId);
+
+            if (role) {
+                role.members.forEach(m => res.push(m));
+            }
+        }
+        
+        return res;
     }
 
     public setLanguage(lang: string): DbRunResult {
