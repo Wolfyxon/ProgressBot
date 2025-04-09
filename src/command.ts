@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, REST, Routes, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from "discord.js";
+import { ChatInputCommandInteraction, Interaction, REST, Routes, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from "discord.js";
 import * as fs from "fs";
 import Database from "./db/database";
 import { DbGuild } from "./db/guilds";
@@ -10,13 +10,13 @@ export type TranslationTable = {
     en: string
 };
 
-export class CommandRunContext {
-    interaction: ChatInputCommandInteraction;
+export class CommandContext {
+    interaction: Interaction;
     db: Database;
 
     private lang?: string
 
-    constructor(interaction: ChatInputCommandInteraction, db: Database) {
+    constructor(interaction: Interaction, db: Database) {
         this.interaction = interaction;
         this.db = db;
     }
@@ -36,6 +36,15 @@ export class CommandRunContext {
 
     public getTranslation(translations: TranslationTable): string {
         return translations[this.getLang()] ?? translations.en;
+    }
+}
+
+export class CommandRunContext extends CommandContext {
+    interaction: ChatInputCommandInteraction;
+
+    constructor(interaction: ChatInputCommandInteraction, db: Database) {
+        super(interaction, db);
+        this.interaction = interaction;
     }
 }
 
