@@ -21,12 +21,6 @@ export class DbResult<T> {
                 this.getSql() +
                 "\n```"
     }
-
-    public getEmbed(): EmbedBuilder {
-        return new EmbedBuilder()
-            .setTitle("SQL Code")
-            .setDescription(this.getCodeBlock())
-    }
 }
 
 export class DbRunResult extends DbResult<StatementResultingChanges> {
