@@ -98,6 +98,14 @@ export default class Users extends DbTable {
         `);
     }
 
+    public incrementXp(guild: string, userIds: string[], amount: number) {
+        const idStr = userIds.toString();
+
+        return this.db.run(
+            `UPDATE ${this.name} SET xp = xp + ${amount} WHERE guildId = '${guild}' AND userId IN (${idStr})`
+        );
+    }
+
     public queryAllInGuild(guild: string): DbResult<DbUser[]> {
         const res = this.db.queryAll(`SELECT * FROM ${this.name} WHERE guildId = ?`, guild);
 
