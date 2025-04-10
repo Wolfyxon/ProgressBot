@@ -1,4 +1,4 @@
-import { Guild, GuildMember } from "discord.js";
+import { APIInteractionGuildMember, Guild, GuildMember } from "discord.js";
 import Database, { DbResult, DbRunResult } from "./database";
 import DbTable from "./table";
 
@@ -25,10 +25,14 @@ export class DbGuild {
         this.teacherRoleId = data.teacherRoleId;
     }
 
-    public isTeacher(member: GuildMember): boolean {
+    public isTeacher(member: GuildMember | APIInteractionGuildMember): boolean {
         if(!this.teacherRoleId) return false;
-
-        return member.roles.cache.has(this.teacherRoleId);
+        
+        if(member instanceof GuildMember) {
+            return member.roles.cache.has(this.teacherRoleId); 
+        } else {
+            return member.roles.includes(this.teacherRoleId);
+        }
     }
 
     public getTeachers(): GuildMember[] {
