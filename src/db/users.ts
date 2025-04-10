@@ -136,6 +136,12 @@ export default class Users extends DbTable {
         );
     }
 
+    public removeUser(guildId: string, userId: string): DbRunResult {
+        return this.db.run(
+            `DELETE FROM ${this.name} WHERE guildId = ? AND userId = ?`
+        , guildId, userId);
+    }
+
     public queryRawUser(guild: string, user: string): DbResult<RawDbUser | null> {
         return this.db.query(`
             SELECT * FROM ${this.name} WHERE guildId = ? AND userId = ?
