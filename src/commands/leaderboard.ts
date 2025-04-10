@@ -18,7 +18,11 @@ export default new Command()
         const users = res.value;
 
         if(users.length == 0) {
-            ctx.interaction.editReply("No users are added for this server!");
+            ctx.interaction.editReply(ctx.getTranslation({
+                en: "No leaderboard entries yet",
+                pl: "Brak wpisów do tablicy wyników"
+            }));
+            
             return;
         }
 
@@ -36,7 +40,7 @@ export default new Command()
 
             return `${prefix} <@${user.userId}>: Level **${level}** (${xp} / ${requiredXp})`;    
         });
-        
+
         const embed = new EmbedBuilder()
             .setTitle(":trophy: Leaderboard")
             .setDescription(lines.join("\n") + res.getCodeBlock())
