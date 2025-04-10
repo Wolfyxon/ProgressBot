@@ -44,6 +44,19 @@ export default class Command {
             return;
         }
 
+        if(this.teacherOnly) {
+            const guild = ctx.db!.guilds.queryOrSetupGuild(interaction.guildId!).guild;
+
+            if(!guild.isTeacher(interaction.member!)) {
+                interaction.reply({
+                    content: ":x: You're not a teacher",
+                    flags: MessageFlags.Ephemeral
+                });
+                
+                return;
+            }
+        }
+
         this.run!(new CommandRunContext(interaction, ctx));
     }
 }
