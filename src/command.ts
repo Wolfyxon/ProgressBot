@@ -35,9 +35,15 @@ export default class Command {
     }
 
     public execute(interaction: ChatInputCommandInteraction, ctx: BotContext) {
+        const commandCtx = new CommandRunContext(interaction, ctx);
+
         if(this.devOnly && !ctx.config!.isDev(interaction.user.id)) {
             interaction.reply({
-                content: ":x: You're not a developer",
+                content: ":x: " + commandCtx.getTranslation({
+                    en: "You're not a developer",
+                    pl: "Nie jesteś deweloperem"
+                }),
+
                 flags: MessageFlags.Ephemeral
             });
             
@@ -49,15 +55,19 @@ export default class Command {
 
             if(!guild.isTeacher(interaction.member!)) {
                 interaction.reply({
-                    content: ":x: You're not a teacher",
+                    content: ":x: " + commandCtx.getTranslation({
+                        en: "You're not a teacher",
+                        pl: "Nie jesteś nauczycielem"
+                    }),
+                    
                     flags: MessageFlags.Ephemeral
                 });
-                
+
                 return;
             }
         }
 
-        this.run!(new CommandRunContext(interaction, ctx));
+        this.run!(commandCtx);
     }
 }
 
