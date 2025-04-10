@@ -34,7 +34,7 @@ export default new Command()
             const xp = user.getLevelXp();
             const requiredXp = getRelativeXpForNextLevel(level);
 
-            return `${prefix} <@${user.userId}>: Level **${level}** (${xp} / ${requiredXp} )`;    
+            return `${prefix} <@${user.userId}>: Level **${level}** (${xp} / ${requiredXp})`;    
         });
 
         if(lines.length == 0) {
