@@ -21,6 +21,10 @@ export class DbUser {
         this.loadData(data);
     }
 
+    public setup() {
+        this.tbl.setupUser(this.guildId, this.userId);
+    }
+
     public loadData(data: RawDbUser) {
         this.userId = data.userId;
         this.guildId = data.guildId;
@@ -69,6 +73,8 @@ export class DbUser {
     }
 
     public addXp(xp: number): DbRunResult {
+        this.setup();
+
         return this.tbl.db.run(
             `UPDATE ${this.tbl.name} SET xp = xp + ? WHERE userId = ?`
         , xp, this.userId);
