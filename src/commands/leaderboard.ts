@@ -28,7 +28,7 @@ export default new Command()
             ":third_place:"
         ];
         
-        const lines = users.map((user, i) => {
+        let lines = users.map((user, i) => {
             const prefix = emojis[i] ?? "#" + (i + 1);
             const level = user.getLevel();
             const xp = user.getLevelXp();
@@ -36,6 +36,15 @@ export default new Command()
 
             return `${prefix} <@${user.userId}>: Level **${level}** (${xp} / ${requiredXp} )`;    
         });
+
+        if(lines.length == 0) {
+            lines = [
+                ctx.getTranslation({
+                    en: "No users to show",
+                    pl: "Brak użytkowników do wyświetlenia"
+                })
+            ];
+        }
 
         const embed = new EmbedBuilder()
             .setTitle(":trophy: Leaderboard")
