@@ -55,7 +55,7 @@ export default new Command()
                 const user = ctx.interaction.options.getUser("user", true);
                 const global = ctx.interaction.options.getBoolean("global", false) ?? false;
 
-                ctx.interaction.deferReply();
+                await ctx.interaction.deferReply();
 
                 if(global) {
                     ctx.db.users.removeUserFromAll(user.id);
