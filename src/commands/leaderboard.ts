@@ -36,16 +36,7 @@ export default new Command()
 
             return `${prefix} <@${user.userId}>: Level **${level}** (${xp} / ${requiredXp})`;    
         });
-
-        if(lines.length == 0) {
-            lines = [
-                ctx.getTranslation({
-                    en: "No users to show",
-                    pl: "Brak użytkowników do wyświetlenia"
-                })
-            ];
-        }
-
+        
         const embed = new EmbedBuilder()
             .setTitle(":trophy: Leaderboard")
             .setDescription(lines.join("\n") + res.getCodeBlock())
