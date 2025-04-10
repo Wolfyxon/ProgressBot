@@ -13,7 +13,8 @@ export class CommandContext {
     botCtx: BotContext;
     db: Database;
 
-    private lang?: string
+    private lang?: string;
+    private dbGuild?: DbGuild;
 
     constructor(interaction: Interaction, botCtx: BotContext) {
         this.interaction = interaction;
@@ -22,7 +23,14 @@ export class CommandContext {
     }
 
     public getDbGuild(): DbGuild {
-        return this.db.guilds.queryOrSetupGuild(this.interaction.guildId!).guild;
+        if(this.dbGuild) {
+            return this.dbGuild;
+        }
+
+        const guild = this.db.guilds.queryOrSetupGuild(this.interaction.guildId!).guild;
+        this.dbGuild =  guild;
+
+        return guild;
     }
 
     public getLang(): string {
