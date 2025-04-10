@@ -29,3 +29,9 @@ export function wordWrap(str: string, lineLength: number): string {
 export function cleanStr(str: string): string {
     return str.replace(/\s+/g,' ').trim();
 }
+
+export async function wait(sec: number): Promise<undefined> {
+    return new Promise(res => {
+        setTimeout(res, sec * 1000);
+    });
+}
