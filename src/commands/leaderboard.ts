@@ -43,7 +43,7 @@ export default new Command()
 
         const embed = new EmbedBuilder()
             .setTitle(":trophy: Leaderboard")
-            .setDescription(lines.join("\n") + res.getCodeBlock())
+            .setDescription(`${lines.join("\n")} \n\n ${res.getCodeBlock()}`)
             .setTimestamp(Date.now())
 
         ctx.interaction.editReply({
