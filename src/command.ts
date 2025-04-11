@@ -122,6 +122,18 @@ export class CommandButtonHandler {
     }
 }
 
+export function getButtonHandlerById(commands: Command[], id: string): CommandButtonHandler | null {
+    for(const cmd of commands) {
+        const h = cmd.getButtonHandlerById(id);
+        
+        if(h) {
+            return h;
+        }
+    }
+
+    return null;
+}
+
 export function getCommandByName(commands: Command[], name: string): Command | null {
     for(const cmd of commands) {
         if(cmd.getName() == name) {
