@@ -1,7 +1,8 @@
-import { ChatInputCommandInteraction, Interaction } from "discord.js";
+import { ButtonInteraction, ChatInputCommandInteraction, Interaction } from "discord.js";
 import Database from "./db/database";
 import { DbGuild } from "./db/guilds";
 import BotContext from "./botContext";
+import Command from "./command";
 
 export type TranslationTable = {
     [key: string]: string, 
@@ -9,6 +10,7 @@ export type TranslationTable = {
 };
 
 export class CommandContext {
+    command: Command;
     interaction: Interaction;
     botCtx: BotContext;
     db: Database;
@@ -16,10 +18,15 @@ export class CommandContext {
     private lang?: string;
     private dbGuild?: DbGuild;
 
-    constructor(interaction: Interaction, botCtx: BotContext) {
+    constructor(command: Command, interaction: Interaction, botCtx: BotContext) {
+        this.command = command;
         this.interaction = interaction;
         this.botCtx = botCtx;
         this.db = botCtx.db!;
+    }
+
+    public getButtonId(name: string): string {
+        return getButtonId(this.command.getName(), name);
     }
 
     public getDbGuild(): DbGuild {
@@ -50,8 +57,21 @@ export class CommandContext {
 export class CommandRunContext extends CommandContext {
     interaction: ChatInputCommandInteraction;
 
-    constructor(interaction: ChatInputCommandInteraction, botCtx: BotContext) {
-        super(interaction, botCtx);
+    constructor(command: Command, interaction: ChatInputCommandInteraction, botCtx: BotContext) {
+        super(command, interaction, botCtx);
         this.interaction = interaction;
     }
+}
+
+export class CommandButtonContext extends CommandContext {
+    interaction: ButtonInteraction;
+
+    constructor(command: Command, interaction: ButtonInteraction, botCtx: BotContext) {
+        super(command, interaction, botCtx);
+        this.interaction = interaction;
+    }
+}
+
+export function getButtonId(commandName: string, buttonName: string): string {
+    return `${commandName}_${buttonName}`;
 }

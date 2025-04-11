@@ -1,19 +1,45 @@
-import { ChatInputCommandInteraction, MessageFlags, REST, Routes, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from "discord.js";
 import * as fs from "fs";
-import Database from "./db/database";
-import { CommandRunContext } from "./commandContext";
+import { ChatInputCommandInteraction, MessageFlags, REST, Routes, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from "discord.js";
+import { CommandButtonContext, CommandRunContext, getButtonId } from "./commandContext";
 import BotContext from "./botContext";
 
 export type UniversalCommandBuilder = SlashCommandBuilder | SlashCommandOptionsOnlyBuilder | SlashCommandSubcommandsOnlyBuilder;
 export type CommandRunCallback = (ctx: CommandRunContext) => void;
+export type CommandButtonCallback = (ctx: CommandButtonContext) => void;
 
 const COMMAND_DIR = "src/commands";
 
 export default class Command {
     private run?: CommandRunCallback;
+    private buttonHandlers: CommandButtonHandler[] = [];
+
     public builder?: UniversalCommandBuilder;
     public teacherOnly: boolean = false;
     public devOnly = false;
+
+    public getName(): string {
+        return this.builder!.name;
+    }
+
+    public getButtonHandlerById(buttonId: string): CommandButtonHandler | null {
+        for(const h of this.buttonHandlers) {
+            if(h.getButtonId() == buttonId) {
+                return h;
+            }
+        }
+        
+        return null;
+    }
+
+    public getButtonHandlerByName(buttonName: string): CommandButtonHandler | null {
+        for(const h of this.buttonHandlers) {
+            if(h.name == buttonName) {
+                return h;
+            }
+        }
+        
+        return null;
+    }
 
     public makeTeacherOnly(): this {
         this.teacherOnly = true;
@@ -35,8 +61,16 @@ export default class Command {
         return this;
     }
 
+    public addButtonHandler(name: string, callback: CommandButtonCallback): this {
+        this.buttonHandlers.push(
+            new CommandButtonHandler(name, this, callback)
+        );
+        
+        return this;
+    }
+
     public execute(interaction: ChatInputCommandInteraction, ctx: BotContext) {
-        const commandCtx = new CommandRunContext(interaction, ctx);
+        const commandCtx = new CommandRunContext(this, interaction, ctx);
 
         if(this.devOnly && !ctx.config!.isDev(interaction.user.id)) {
             interaction.reply({
@@ -69,6 +103,22 @@ export default class Command {
         }
 
         this.run!(commandCtx);
+    }
+}
+
+export class CommandButtonHandler {
+    name: string;
+    callback: CommandButtonCallback;
+    command: Command;
+
+    constructor(name: string, command: Command, callback: CommandButtonCallback) {
+        this.name = name;
+        this.callback = callback;
+        this.command = command;
+    }
+
+    public getButtonId(): string {
+        return getButtonId(this.command.getName(), this.name);
     }
 }
 

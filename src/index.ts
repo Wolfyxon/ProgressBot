@@ -41,6 +41,8 @@ async function main() {
                     break;
                 }
             }
+        } else if(interaction.isButton()) {
+            
         }
     });
     
