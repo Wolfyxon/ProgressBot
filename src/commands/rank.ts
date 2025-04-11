@@ -10,7 +10,7 @@ export default new Command()
                 pl: "Sprawdź swoją lub czyjąś rangę"
             })
             
-            .addUserOption(o => o
+            .addUserOption(opt => opt
                 .setName("user")
                 .setNameLocalizations({
                     pl: "użytkownik"
@@ -23,7 +23,7 @@ export default new Command()
 
                 .setRequired(false)
             )
-            .addBooleanOption(o => o
+            .addBooleanOption(opt => opt
                 .setName("ephemeral")
                 .setNameLocalizations({
                     pl: "niewidzialna"

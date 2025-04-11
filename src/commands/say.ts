@@ -6,7 +6,7 @@ export default new Command()
         new SlashCommandBuilder()
             .setName("say")
             .setDescription("Repeats text")
-            .addStringOption(option => option
+            .addStringOption(opt => opt
                 .setName("text")
                 .setDescription("Text to repeat")
                 .setRequired(true)
