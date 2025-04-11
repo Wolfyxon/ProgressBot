@@ -15,6 +15,12 @@ export default new Command()
                 .addStringOption(opt => opt
                     .setName("query")
                     .setDescription("SQL query")
+                    .setRequired(true)
+                )
+                .addBooleanOption(opt => opt
+                    .setName("dangerous")
+                    .setDescription("Allows UPDATE without WHERE")
+                    .setRequired(false)
                 )
             )
             .addSubcommand(cmd => cmd
@@ -39,6 +45,14 @@ export default new Command()
                 await ctx.interaction.deferReply();
 
                 const query = ctx.interaction.options.getString("query", true);
+                const dangerMode = ctx.interaction.options.getBoolean("dangerous", false) ?? false;
+                
+                if(!dangerMode) {
+                    if(query.includes("UPDATE") && !query.includes("WHERE")) {
+                        ctx.interaction.editReply(":x: `UPDATE` must be paired with `WHERE` or you'll destroy the database. \nUse with **dangerous** to run anyway.");
+                        return;
+                    }
+                }
                 
                 try {
                     const res = ctx.db.run(query);
