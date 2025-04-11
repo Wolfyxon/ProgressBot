@@ -29,9 +29,13 @@ export function getLeaderboardMessage(ctx: CommandContext): MessagePayload | Bas
         return `${prefix} <@${user.userId}>: Level **${level}** (${xp} / ${requiredXp})`;    
     });
 
+    const heading = "# :trophy: " + ctx.getTranslation({
+        en: "Leaderboard",
+        pl: "Tablica wyników"
+    });
+
     const embed = new EmbedBuilder()
-        .setTitle(":trophy: Leaderboard")
-        .setDescription(`${lines.join("\n")} \n\n ${res.getCodeBlock()}`)
+        .setDescription(`${heading} \n ${lines.join("\n")} \n\n ${res.getCodeBlock()}`)
         .setTimestamp(Date.now())
 
     const row = new ActionRowBuilder<ButtonBuilder>()
