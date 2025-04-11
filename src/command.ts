@@ -122,6 +122,16 @@ export class CommandButtonHandler {
     }
 }
 
+export function getCommandByName(commands: Command[], name: string): Command | null {
+    for(const cmd of commands) {
+        if(cmd.getName() == name) {
+            return cmd;
+        }
+    }
+
+    return null;
+}
+
 export async function getCommands(): Promise<Command[]> {
     return await Promise.all(fs.readdirSync(COMMAND_DIR).map(async (file: string) => {
         const module = await import(`../${COMMAND_DIR}/${file}`);
