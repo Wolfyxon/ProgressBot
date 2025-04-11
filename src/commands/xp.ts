@@ -147,12 +147,18 @@ export default new Command()
                     ctx.db.users.setupUser(m.guild.id, m.user.id);
                 });
 
-                ctx.db.users.incrementXp(ctx.interaction.guildId, channel.members.map(m => m.id), xp);
+                const res = ctx.db.users.incrementXp(ctx.interaction.guildId, channel.members.map(m => m.id), xp);
+                const txt = ctx.getTranslation({
+                    en: `Granted \`${xp}\` XP to \`${channel.members.size}\` users in <#${channel.id}>`,
+                    pl: `Przyznano \`${xp}\` XP \`${channel.members.size}\` użytkownikom na kanale <#${channel.id}>`
+                });
                 
-                ctx.interaction.editReply(ctx.getTranslation({
-                    en: `Granted **${xp}** XP to ${channel.members.size} users`,
-                    pl: `Przyznano **${xp}** XP ${channel.members.size} użytkownikom`
-                }));
+                ctx.interaction.editReply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setDescription(`:white_check_mark: ${txt} ${res.getCodeBlock()}`)
+                    ]
+                })
 
                 break;
             }
