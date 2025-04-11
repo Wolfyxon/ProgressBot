@@ -5,11 +5,12 @@ import { CommandRunContext } from "./commandContext";
 import BotContext from "./botContext";
 
 export type UniversalCommandBuilder = SlashCommandBuilder | SlashCommandOptionsOnlyBuilder | SlashCommandSubcommandsOnlyBuilder;
+export type CommandRunCallback = (ctx: CommandRunContext) => void;
 
 const COMMAND_DIR = "src/commands";
 
 export default class Command {
-    private run?: (ctx: CommandRunContext) => void;
+    private run?: CommandRunCallback;
     public builder?: UniversalCommandBuilder;
     public teacherOnly: boolean = false;
     public devOnly = false;
@@ -24,7 +25,7 @@ export default class Command {
         return this;
     }
 
-    public setRun(callback: (ctx: CommandRunContext) => void): this {
+    public setRun(callback: CommandRunCallback): this {
         this.run = callback;
         return this;
     }
