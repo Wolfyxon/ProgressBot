@@ -49,17 +49,17 @@ export default new Command()
                 
                 if(!dangerMode) {
                     if(query.includes("UPDATE") && !query.includes("WHERE")) {
-                        ctx.interaction.editReply(":x: `UPDATE` must be paired with `WHERE` or you'll destroy the database. \nUse with **dangerous** to run anyway.");
+                        ctx.interaction.editReply(":warning: `UPDATE` must be paired with `WHERE` or you'll destroy the database. \nUse with **dangerous** to run anyway.");
                         return;
                     }
                 }
                 
                 try {
                     const res = ctx.db.run(query);
-                    ctx.interaction.editReply(`Query successful. \`${res.value.changes}\` changes`);
+                    ctx.interaction.editReply(`:white_check_mark: Query successful. \`${res.value.changes}\` changes`);
 
                 } catch (e) {
-                    ctx.interaction.editReply(`SQL error: \`\`\`${e}\`\`\``);
+                    ctx.interaction.editReply(`:x: SQL error: \`\`\`${e}\`\`\``);
                 }
 
                 break;
