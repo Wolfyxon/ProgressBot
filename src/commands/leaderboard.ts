@@ -7,13 +7,6 @@ export function getLeaderboardMessage(ctx: CommandContext): MessagePayload | Bas
     const res = ctx.db.users.queryLeaderboard(ctx.interaction.guildId!);
     const users = res.value;
 
-    if(users.length == 0) {
-        return ctx.getTranslation({
-            en: "No leaderboard entries yet",
-            pl: "Brak wpisów do tablicy wyników"
-        });
-    }
-
     const emojis = [
         ":first_place:",
         ":second_place:",
@@ -28,6 +21,15 @@ export function getLeaderboardMessage(ctx: CommandContext): MessagePayload | Bas
 
         return `${prefix} <@${user.userId}>: Level **${level}** (${xp} / ${requiredXp})`;    
     });
+
+    if(users.length == 0) {
+        lines = [
+            ctx.getTranslation({
+                en: "No leaderboard entries yet",
+                pl: "Brak wpisów do tablicy wyników"
+            })
+        ];
+    }
 
     const heading = "# :trophy: " + ctx.getTranslation({
         en: "Leaderboard",
