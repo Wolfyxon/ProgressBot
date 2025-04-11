@@ -34,12 +34,12 @@ async function main() {
     });
 
     client.on(Events.InteractionCreate, interaction => {
-        if (!interaction.isChatInputCommand()) return;
-
-        for(const cmd of commands) {
-            if(cmd.builder!.name == interaction.commandName) {
-                cmd.execute(interaction, botCtx);
-                break;
+        if(interaction.isChatInputCommand()) {
+            for(const cmd of commands) {
+                if(cmd.builder!.name == interaction.commandName) {
+                    cmd.execute(interaction, botCtx);
+                    break;
+                }
             }
         }
     });
