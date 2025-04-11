@@ -65,5 +65,6 @@ export default new Command()
         ctx.interaction.editReply(getLeaderboardMessage(ctx));
     })
     .addButtonHandler("refresh", (ctx) => {
+        ctx.interaction.deferUpdate();
         ctx.interaction.message.edit(getLeaderboardMessage(ctx));
     })
