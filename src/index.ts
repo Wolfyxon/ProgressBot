@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { Client, Events, GatewayIntentBits } from "discord.js";
-import { getCommands } from "./command";
+import { getButtonHandlerById, getCommandByName, getCommands } from "./command";
 import Database from "./db/database";
 import BotContext from "./botContext";
 import { getConfig } from "./config";
@@ -35,14 +35,22 @@ async function main() {
 
     client.on(Events.InteractionCreate, interaction => {
         if(interaction.isChatInputCommand()) {
-            for(const cmd of commands) {
-                if(cmd.builder!.name == interaction.commandName) {
-                    cmd.execute(interaction, botCtx);
-                    break;
-                }
+            const cmd = getCommandByName(commands, interaction.commandName);
+
+            if(cmd) {
+                cmd.execute(interaction, botCtx);
+            } else {
+                interaction.reply(":x: This command isn't implemented. \n**This is a bug, contact Wolfyxon!**");
             }
+
         } else if(interaction.isButton()) {
-            
+            if(interaction.replied) return;
+
+            const handler = getButtonHandlerById(commands, interaction.customId);
+
+            if(handler) {
+                handler.execute(interaction, botCtx);
+            }
         }
     });
     

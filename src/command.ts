@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { ChatInputCommandInteraction, MessageFlags, REST, Routes, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from "discord.js";
+import { ButtonInteraction, ChatInputCommandInteraction, MessageFlags, REST, Routes, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from "discord.js";
 import { CommandButtonContext, CommandRunContext, getButtonId } from "./commandContext";
 import BotContext from "./botContext";
 
@@ -117,6 +117,12 @@ export class CommandButtonHandler {
         this.command = command;
     }
 
+    public execute(interaction: ButtonInteraction, botCtx: BotContext) {
+        this.callback(
+            new CommandButtonContext(this.command, interaction, botCtx)
+        );
+    }
+    
     public getButtonId(): string {
         return getButtonId(this.command.getName(), this.name);
     }
