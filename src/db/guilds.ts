@@ -23,6 +23,15 @@ export default class Guilds extends DbTable {
         `);
     }
 
+    public queryGuildIds(): DbResult<string[]> {
+        const res = this.db.queryAll(`SELECT guildId FROM ${this.name}`);
+        
+        return new DbResult<string[]> (
+            res.statement,
+            res.value.map(v => v.guildId)
+        );
+    }
+
     public queryGuild(guildId: string): DbResult<DbGuild | null> {
         const res = this.db.query(`SELECT * FROM ${this.name} WHERE guildId = ?`, guildId);
 
