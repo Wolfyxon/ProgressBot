@@ -31,7 +31,7 @@ export class DbRunResult extends DbResult<StatementResultingChanges> {
 }
 
 export default class Database {
-    public botCtx: BotContext
+    public botCtx: BotContext;
     public db: DatabaseSync;
     public users: Users;
     public guilds: Guilds;
