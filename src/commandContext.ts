@@ -9,16 +9,16 @@ export type TranslationTable = {
     en: string
 };
 
-export class CommandContext {
+export class CommandContext<T extends Interaction> {
     command: Command;
-    interaction: Interaction;
+    interaction: T;
     botCtx: BotContext;
     db: Database;
 
     private lang?: string;
     private dbGuild?: DbGuild;
 
-    constructor(command: Command, interaction: Interaction, botCtx: BotContext) {
+    constructor(command: Command, interaction: T, botCtx: BotContext) {
         this.command = command;
         this.interaction = interaction;
         this.botCtx = botCtx;
@@ -54,23 +54,8 @@ export class CommandContext {
     }
 }
 
-export class CommandRunContext extends CommandContext {
-    interaction: ChatInputCommandInteraction;
-
-    constructor(command: Command, interaction: ChatInputCommandInteraction, botCtx: BotContext) {
-        super(command, interaction, botCtx);
-        this.interaction = interaction;
-    }
-}
-
-export class CommandButtonContext extends CommandContext {
-    interaction: ButtonInteraction;
-
-    constructor(command: Command, interaction: ButtonInteraction, botCtx: BotContext) {
-        super(command, interaction, botCtx);
-        this.interaction = interaction;
-    }
-}
+export class CommandRunContext extends CommandContext<ChatInputCommandInteraction> {}
+export class CommandButtonContext extends CommandContext<ButtonInteraction> {}
 
 export function getComponentId(commandName: string, componentName: string): string {
     return `${commandName}_${componentName}`;
