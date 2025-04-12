@@ -125,7 +125,11 @@ export default new Command()
                     
                     res.value.forEach(row => {
                         if(lines.length == 0) {
-                            addRow(Object.keys(row));
+                            const keys = Object.keys(row);
+                            const sep = "-".repeat(maxLen);
+                            
+                            addRow(keys);
+                            addRow(keys.map(k => sep));
                         }
 
                         addRow(
