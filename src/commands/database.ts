@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from "discord.js";
+import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import Command from "../command";
 
 export default new Command()
@@ -11,6 +11,21 @@ export default new Command()
             .addSubcommand(cmd => cmd
                 .setName("run")
                 .setDescription("Runs a SQL query.")
+                
+                .addStringOption(opt => opt
+                    .setName("query")
+                    .setDescription("SQL query")
+                    .setRequired(true)
+                )
+                .addBooleanOption(opt => opt
+                    .setName("dangerous")
+                    .setDescription("Allows UPDATE without WHERE")
+                    .setRequired(false)
+                )
+            )
+            .addSubcommand(cmd => cmd
+                .setName("query")
+                .setDescription("Runs a SQL query and shows the returned data")
                 
                 .addStringOption(opt => opt
                     .setName("query")
@@ -40,24 +55,85 @@ export default new Command()
             )
     )
     .setRun(async (ctx) => {
+        function dangerCheck(query: string): boolean {
+            const dangerMode = ctx.interaction.options.getBoolean("dangerous", false) ?? false;
+
+            if(!dangerMode) {
+                if(query.includes("UPDATE") && !query.includes("WHERE")) {
+                    ctx.interaction.editReply(":warning: `UPDATE` must be paired with `WHERE` or you'll destroy the database. \nUse with **dangerous** to run anyway.");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         switch(ctx.interaction.options.getSubcommand(true)) {
             case "run": {
                 await ctx.interaction.deferReply();
 
                 const query = ctx.interaction.options.getString("query", true);
-                const dangerMode = ctx.interaction.options.getBoolean("dangerous", false) ?? false;
-                
-                if(!dangerMode) {
-                    if(query.includes("UPDATE") && !query.includes("WHERE")) {
-                        ctx.interaction.editReply(":warning: `UPDATE` must be paired with `WHERE` or you'll destroy the database. \nUse with **dangerous** to run anyway.");
-                        return;
-                    }
-                }
+                if(!dangerCheck(query)) return;
                 
                 try {
                     const res = ctx.db.run(query);
                     ctx.interaction.editReply(`:white_check_mark: Query successful. \`${res.value.changes}\` changes`);
 
+                } catch (e) {
+                    ctx.interaction.editReply(`:x: SQL error: \`\`\`${e}\`\`\``);
+                }
+
+                break;
+            }
+
+            case "query": {
+                await ctx.interaction.deferReply();
+
+                const query = ctx.interaction.options.getString("query", true);
+                if(!dangerCheck(query)) return;
+
+                try {
+                    const res = ctx.db.queryAll(query);
+                    
+                    let maxLen = 0;
+                    
+                    res.value.forEach(row => {
+                        Object.entries(row).forEach(([key, value]) => {
+                            const vString = String(value);
+                            
+                            if(key.length > maxLen) {
+                                maxLen = key.length;
+                            }
+                            if(vString.length > maxLen) {
+                                maxLen = vString.length;
+                            }
+                        });
+                    });
+
+                    const embed = new EmbedBuilder();
+                    const lines: string[] = [];
+
+                    function addRow(columns: string[]) {
+                        let row: string[] = [];
+
+                        columns.forEach(column => {
+                            row.push(column + " ".repeat(maxLen - column.length));
+                        });
+
+                        lines.push(row.join(" | "));
+                    }
+                    
+                    res.value.forEach(row => {
+                        if(lines.length == 0) {
+                            addRow(Object.keys(row));
+                        }
+
+                        addRow(
+                            Object.values(row).map(v => String(v))
+                        );
+                    });
+
+                    ctx.interaction.editReply(`\`\`\`${lines.join("\n")}\`\`\``);
                 } catch (e) {
                     ctx.interaction.editReply(`:x: SQL error: \`\`\`${e}\`\`\``);
                 }
