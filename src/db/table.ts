@@ -1,6 +1,6 @@
 import Database from "./database";
 
-export default class DbTable {
+export default abstract class DbTable {
     name: string;
     db: Database;
 
@@ -9,7 +9,5 @@ export default class DbTable {
         this.db = db;
     }
 
-    public setup(): void {
-        throw "Setup function not implemented";
-    }
+    public abstract setup(): void;
 }
