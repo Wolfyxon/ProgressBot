@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { ButtonInteraction, ChatInputCommandInteraction, MessageFlags, REST, Routes, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from "discord.js";
-import { CommandButtonContext, CommandRunContext, getButtonId } from "./commandContext";
+import { CommandButtonContext, CommandRunContext, getComponentId } from "./commandContext";
 import BotContext from "./botContext";
 
 export type UniversalCommandBuilder = SlashCommandBuilder | SlashCommandOptionsOnlyBuilder | SlashCommandSubcommandsOnlyBuilder;
@@ -124,7 +124,7 @@ export class CommandButtonHandler {
     }
     
     public getButtonId(): string {
-        return getButtonId(this.command.getName(), this.name);
+        return getComponentId(this.command.getName(), this.name);
     }
 }
 

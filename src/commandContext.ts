@@ -25,8 +25,8 @@ export class CommandContext {
         this.db = botCtx.db!;
     }
 
-    public getButtonId(name: string): string {
-        return getButtonId(this.command.getName(), name);
+    public getComponentId(name: string): string {
+        return getComponentId(this.command.getName(), name);
     }
 
     public getDbGuild(): DbGuild {
@@ -72,6 +72,6 @@ export class CommandButtonContext extends CommandContext {
     }
 }
 
-export function getButtonId(commandName: string, buttonName: string): string {
-    return `${commandName}_${buttonName}`;
+export function getComponentId(commandName: string, componentName: string): string {
+    return `${commandName}_${componentName}`;
 }

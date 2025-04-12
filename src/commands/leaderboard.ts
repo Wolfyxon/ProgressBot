@@ -43,7 +43,7 @@ export function getLeaderboardMessage(ctx: CommandContext): MessagePayload | Bas
     const row = new ActionRowBuilder<ButtonBuilder>()
         .addComponents(
             new ButtonBuilder()
-                .setCustomId(ctx.getButtonId("refresh"))
+                .setCustomId(ctx.getComponentId("refresh"))
                 .setStyle(ButtonStyle.Primary)
                 .setLabel(ctx.getTranslation({
                     en: "Refresh",
