@@ -42,7 +42,7 @@ export class QuizManager {
         const raw = this.quizzes.queryQuiz(messageId);
 
         if(!raw.value) {
-            new DbResult(raw.statement, null);
+            return new DbResult(raw.statement, null);
         }
 
         return new DbResult(
