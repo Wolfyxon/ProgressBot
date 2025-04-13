@@ -100,7 +100,7 @@ export default new Command()
                 new ActionRowBuilder<ButtonBuilder>()
                     .addComponents(answers.map((ans, i) => 
                         new ButtonBuilder()
-                            .setCustomId(answerLetters[i])
+                            .setCustomId(ctx.getComponentId(answerLetters[i]))
                             .setLabel(answerLetters[i].toUpperCase())
                             .setStyle(i + 1)
                     ))
