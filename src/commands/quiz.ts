@@ -84,7 +84,7 @@ export default new Command()
             pl: "Nagroda"
         });
 
-        modalInt.reply({
+        const reply = await modalInt.reply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(
@@ -106,4 +106,6 @@ export default new Command()
                     ))
             ]
         });
+        
+        ctx.db.quizzes.addQuiz(reply.id, correctAnswer, reward);
     });
