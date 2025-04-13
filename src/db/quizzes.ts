@@ -63,4 +63,10 @@ export class QuizAnswers extends DbTable {
             )
         `);
     }
+
+    public queryAnswers(messageId: string): DbResult<RawDbQuizAnswer[]> {
+        return this.db.queryAllAs(
+            `SELECT * FROM ${this.name} WHERE messageId = ?`
+        , messageId);
+    }
 }
