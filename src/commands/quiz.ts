@@ -1,6 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, MessageFlags, ModalBuilder, SlashCommandBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import Command from "../command";
 import { Answer } from "../db/quizzes";
+import { wait } from "../utils";
 
 const answerLetters = ["a", "b", "c", "d"];
 
@@ -113,7 +114,7 @@ const command = new Command()
     });
 
 answerLetters.forEach(letter => {
-    command.addButtonHandler(letter, (ctx) => {
+    command.addButtonHandler(letter, async (ctx) => {
         const messageId = ctx.interaction.message.id;
         const userId = ctx.interaction.user.id;
 
@@ -175,6 +176,11 @@ answerLetters.forEach(letter => {
 
                 flags: MessageFlags.Ephemeral
             });
+
+            const user = ctx.db.users.getUser(ctx.interaction.guildId!, ctx.interaction.user.id);
+            await wait(0.1);
+
+            user.addXp(quiz.rewardXp);
         } else {
             ctx.interaction.reply({
                 content: ":face_with_diagonal_mouth:" + ctx.getTranslation({
