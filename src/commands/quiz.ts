@@ -30,6 +30,8 @@ export default new Command()
         const correctAnswer = ctx.interaction.options.getString("correct", true);
         const reward = ctx.interaction.options.getNumber("reward", true);
         
+        const correctAnswerIdx = answerLetters.indexOf(correctAnswer);
+
         await ctx.interaction.showModal(
             new ModalBuilder()
                 .setTitle("Quiz")
@@ -53,11 +55,11 @@ export default new Command()
 
                     if(l == correctAnswer) {
                         input.setLabel(`✅ ${label}`);
-                        input.setRequired(true);
                     } else {
                         input.setLabel(`❌ ${label}`);
-                        input.setRequired(false);
                     }
+                    
+                    input.setRequired(i <= correctAnswerIdx);
 
                     return new ActionRowBuilder<TextInputBuilder>()
                         .addComponents(input);
