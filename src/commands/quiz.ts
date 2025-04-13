@@ -165,32 +165,45 @@ answerLetters.forEach(letter => {
             })
         }
 
+        const embed = new EmbedBuilder();
+
         if(letter == quiz.correctAnswer) {
             const rewardText = `\`${quiz.rewardXp}\``;
 
-            ctx.interaction.reply({
-                content: ":tada:" + ctx.getTranslation({
-                    en: `Correct! \nYou get ${rewardText} XP.`,
-                    pl: `Dobrze! \nOtrzymujesz ${rewardText} XP.`
-                }),
+            embed.setTitle(":tada: " + ctx.getTranslation({
+                en: `Correct!`,
+                pl: `Dobrze!`
+            }));
 
-                flags: MessageFlags.Ephemeral
-            });
+            embed.setDescription(ctx.getTranslation({
+                en: `You get ${rewardText} XP.`,
+                pl: `Otrzymujesz ${rewardText} XP.`
+            }));
+
+            embed.setColor("Green");
 
             const user = ctx.db.users.getUser(ctx.interaction.guildId!, ctx.interaction.user.id);
             await wait(0.1);
 
             user.addXp(quiz.rewardXp);
         } else {
-            ctx.interaction.reply({
-                content: ":face_with_diagonal_mouth:" + ctx.getTranslation({
-                    en: `Wrong answer. \nThe correct answer is: ${correctAnswerText}. \nBetter luck next time!`,
-                    pl: `Zła odpowiedź. \nPoprawna odpowiedź to: ${correctAnswerText}. \nPowodzenia innym razem!`
-                }),
+            embed.setTitle(":face_with_diagonal_mouth: " + ctx.getTranslation({
+                en: "Wrong answer",
+                pl: "Zła odpowiedź"
+            }));
 
-                flags: MessageFlags.Ephemeral
-            });
+            embed.setDescription(ctx.getTranslation({
+                en: `The correct answer is: ${correctAnswerText}. \nBetter luck next time!`,
+                pl: `Poprawna odpowiedź to: ${correctAnswerText}. \nPowodzenia innym razem!`
+            }));
+
+            embed.setColor("Red");
         }
+
+        ctx.interaction.reply({
+            embeds: [embed],
+            flags: MessageFlags.Ephemeral
+        });
     });
 });
 
