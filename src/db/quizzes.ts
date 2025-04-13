@@ -82,6 +82,12 @@ export class QuizAnswers extends DbTable {
             `SELECT answerId FROM ${this.name} WHERE messageId = ? AND userId = ?`
         , messageId, userId);
     }
+
+    public addAnswer(messageId: string, userId: string, answerId: AnswerId): DbRunResult {
+        return this.db.run(
+            `INSERT INTO ${this.name} (messageId, userId, answerId) VALUES (?, ?, ?)`
+        , messageId, userId, answerId);
+    }
 }
 
 
