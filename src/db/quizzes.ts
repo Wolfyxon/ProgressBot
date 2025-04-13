@@ -57,6 +57,12 @@ export class Quizzes extends DbTable {
             `SELECT * FROM ${this.name} WHERE messageId = ?`
         , messageId);
     }
+
+    public addQuiz(messageId: string, correctAnswer: string, rewardXp: number): DbRunResult {
+        return this.db.run(
+            `INSERT INTO ${this.name} (messageId, correctAnswer, rewardXp) VALUES(?, ?, ?)`
+        , messageId, correctAnswer, rewardXp);
+    }
 }
 
 export class QuizAnswers extends DbTable {
