@@ -1,23 +1,23 @@
 import Database, { DbResult, DbRunResult } from "./database";
 import DbTable from "./table";
 
-export enum AnswerId {
-    A,
-    B,
-    C,
-    D
+export enum Answer {
+    A = "a",
+    B = "b",
+    C = "c",
+    D = "d"
 }
 
 export type RawDbQuiz = {
     messageId: string;
-    correctAnswerId: AnswerId,
+    correctAnswer: Answer,
     rewardXp: number
 }
 
 export type RawDbQuizAnswer = {
     messageId: string,
     userId: string,
-    answerId: number
+    answer: number
 }
 
 export class QuizManager {
@@ -39,8 +39,8 @@ export class Quizzes extends DbTable {
         this.db.db.exec(`
             CREATE TABLE IF NOT EXISTS ${this.name} (
                 messageId VARCHAR(20) NOT NULL,
-                correctAnswerId INTEGER NOT NULL,
-                rewardXp INTEGER NOT NULLs,
+                correctAnswer VARCHAR(1) NOT NULL,
+                rewardXp INTEGER NOT NULL,
 
                 UNIQUE (messageId)
             )
@@ -64,7 +64,7 @@ export class QuizAnswers extends DbTable {
             CREATE TABLE IF NOT EXISTS ${this.name} (
                 messageId VARCHAR(20) NOT NULL,
                 userId VARCHAR(20) NOT NULL,
-                answerId INTEGER NOT NULL,
+                answer VARCHAR(1) NOT NULL,
 
                 UNIQUE (messageId, userId)
             )
@@ -77,16 +77,16 @@ export class QuizAnswers extends DbTable {
         , messageId);
     }
 
-    public queryAnswer(messageId: string, userId: string): DbResult<AnswerId | null> {
+    public queryAnswer(messageId: string, userId: string): DbResult<Answer | null> {
         return this.db.queryAs(
-            `SELECT answerId FROM ${this.name} WHERE messageId = ? AND userId = ?`
+            `SELECT answer FROM ${this.name} WHERE messageId = ? AND userId = ?`
         , messageId, userId);
     }
 
-    public addAnswer(messageId: string, userId: string, answerId: AnswerId): DbRunResult {
+    public addAnswer(messageId: string, userId: string, answer: Answer): DbRunResult {
         return this.db.run(
-            `INSERT INTO ${this.name} (messageId, userId, answerId) VALUES (?, ?, ?)`
-        , messageId, userId, answerId);
+            `INSERT INTO ${this.name} (messageId, userId, answer) VALUES (?, ?, ?)`
+        , messageId, userId, answer);
     }
 }
 
@@ -95,13 +95,13 @@ export class QuizAnswers extends DbTable {
 export class Quiz {
     mgr: QuizManager;
     messageId: string;
-    correctAnswerId: number;
+    correctAnswer: string;
     rewardXp: number;
 
     constructor(mgr: QuizManager, data: RawDbQuiz) {
         this.mgr = mgr;
         this.messageId = data.messageId;
-        this.correctAnswerId = data.correctAnswerId;
+        this.correctAnswer = data.correctAnswer;
         this.rewardXp = data.rewardXp;
     }
 
@@ -109,7 +109,7 @@ export class Quiz {
         return this.mgr.answers.queryAnswers(this.messageId);
     }
 
-    public queryAnswer(userId: string): DbResult<AnswerId | null> {
+    public queryAnswer(userId: string): DbResult<Answer | null> {
         return this.mgr.answers.queryAnswer(this.messageId, userId);
     }
 }
