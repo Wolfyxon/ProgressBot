@@ -3,6 +3,7 @@ import Users from "./users";
 import Guilds from "./guilds";
 import BotContext from "../botContext";
 import { cleanStr } from "../utils";
+import { QuizManager } from "./quizzes";
 
 export class DbResult<T> {
     statement: StatementSync
@@ -35,12 +36,14 @@ export default class Database {
     public db: DatabaseSync;
     public users: Users;
     public guilds: Guilds;
+    public quizzes: QuizManager;
     
     constructor(context: BotContext, file?: string) {
         this.botCtx = context;
         this.db = new DatabaseSync(file ?? "data.db");
         this.users = new Users(this);
         this.guilds = new Guilds(this);
+        this.quizzes = new QuizManager(this);
     }
     
     public setup() {
