@@ -81,7 +81,7 @@ export default new Command()
                     .addComponents(answers.map((ans, i) => 
                         new ButtonBuilder()
                             .setCustomId(answerLetters[i])
-                            .setLabel(answerLetters[i])
+                            .setLabel(answerLetters[i].toUpperCase())
                             .setStyle(i + 1)
                     ))
             ]
