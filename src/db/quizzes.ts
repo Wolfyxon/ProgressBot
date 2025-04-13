@@ -33,6 +33,10 @@ export class QuizManager {
         this.quizzes.setup();
         this.answers.setup();
     }
+
+    public addQuiz(messageId: string, correctAnswer: string, rewardXp: number): DbRunResult {
+        return this.quizzes.addQuiz(messageId, correctAnswer, rewardXp);
+    }
 }
 
 export class Quizzes extends DbTable {
