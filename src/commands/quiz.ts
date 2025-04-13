@@ -105,10 +105,11 @@ const command = new Command()
                             .setLabel(answerLetters[i].toUpperCase())
                             .setStyle(i + 1)
                     ))
-            ]
+            ],
+            withResponse: true
         });
         
-        ctx.db.quizzes.addQuiz(reply.id, correctAnswer, reward);
+        ctx.db.quizzes.addQuiz(reply.resource!.message!.id, correctAnswer, reward);
     });
 
 answerLetters.forEach(letter => {
