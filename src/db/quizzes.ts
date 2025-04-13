@@ -28,6 +28,11 @@ export class QuizManager {
         this.quizzes = new Quizzes(db);
         this.answers = new QuizAnswers(db);
     }
+
+    public setup() {
+        this.quizzes.setup();
+        this.answers.setup();
+    }
 }
 
 export class Quizzes extends DbTable {
