@@ -37,6 +37,19 @@ export class QuizManager {
     public addQuiz(messageId: string, correctAnswer: string, rewardXp: number): DbRunResult {
         return this.quizzes.addQuiz(messageId, correctAnswer, rewardXp);
     }
+
+    public queryQuiz(messageId: string): DbResult<Quiz | null> {
+        const raw = this.quizzes.queryQuiz(messageId);
+
+        if(!raw.value) {
+            new DbResult(raw.statement, null);
+        }
+
+        return new DbResult(
+            raw.statement,
+            new Quiz(this, raw.value as RawDbQuiz)
+        )
+    }
 }
 
 export class Quizzes extends DbTable {
@@ -56,7 +69,7 @@ export class Quizzes extends DbTable {
         `);
     }
 
-    public queryQuiz(messageId: string): DbResult<RawDbQuiz> {
+    public queryQuiz(messageId: string): DbResult<RawDbQuiz | null> {
         return this.db.queryAs(
             `SELECT * FROM ${this.name} WHERE messageId = ?`
         , messageId);
