@@ -83,3 +83,27 @@ export class QuizAnswers extends DbTable {
         , messageId, userId);
     }
 }
+
+
+
+export class Quiz {
+    mgr: QuizManager;
+    messageId: string;
+    correctAnswerId: number;
+    rewardXp: number;
+
+    constructor(mgr: QuizManager, data: RawDbQuiz) {
+        this.mgr = mgr;
+        this.messageId = data.messageId;
+        this.correctAnswerId = data.correctAnswerId;
+        this.rewardXp = data.rewardXp;
+    }
+
+    public queryAnswers(): DbResult<RawDbQuizAnswer[]> {
+        return this.mgr.answers.queryAnswers(this.messageId);
+    }
+
+    public queryAnswer(userId: string): DbResult<AnswerId | null> {
+        return this.mgr.answers.queryAnswer(this.messageId, userId);
+    }
+}
