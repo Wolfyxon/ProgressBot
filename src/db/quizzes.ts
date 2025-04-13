@@ -1,9 +1,16 @@
 import Database, { DbResult } from "./database";
 import DbTable from "./table";
 
+export enum AnswerId {
+    A,
+    B,
+    C,
+    D
+}
+
 export type RawDbQuiz = {
     messageId: string;
-    correctAnswerId: number,
+    correctAnswerId: AnswerId,
     rewardXp: number
 }
 
@@ -68,5 +75,11 @@ export class QuizAnswers extends DbTable {
         return this.db.queryAllAs(
             `SELECT * FROM ${this.name} WHERE messageId = ?`
         , messageId);
+    }
+
+    public queryAnswer(messageId: string, userId: string): DbResult<AnswerId | null> {
+        return this.db.queryAs(
+            `SELECT answerId FROM ${this.name} WHERE messageId = ? AND userId = ?`
+        , messageId, userId);
     }
 }
