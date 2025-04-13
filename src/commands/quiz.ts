@@ -137,7 +137,7 @@ answerLetters.forEach(letter => {
         const correctAnswerText = `**${quiz.correctAnswer.toUpperCase()}**`;
 
         if(answer) {
-            const userAnswerText = `**${answer.toUpperCase()}**`;
+            const userAnswerText = `**${answer.answer.toString().toUpperCase()}**`;
 
             ctx.interaction.reply({
                 content: ctx.getTranslation({

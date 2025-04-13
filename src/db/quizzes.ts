@@ -105,7 +105,7 @@ export class QuizAnswers extends DbTable {
         , messageId);
     }
 
-    public queryAnswer(messageId: string, userId: string): DbResult<Answer | null> {
+    public queryAnswer(messageId: string, userId: string): DbResult<RawDbQuizAnswer | null> {
         return this.db.queryAs(
             `SELECT answer FROM ${this.name} WHERE messageId = ? AND userId = ?`
         , messageId, userId);
@@ -137,7 +137,7 @@ export class Quiz {
         return this.mgr.answers.queryAnswers(this.messageId);
     }
 
-    public queryAnswer(userId: string): DbResult<Answer | null> {
+    public queryAnswer(userId: string): DbResult<RawDbQuizAnswer | null> {
         return this.mgr.answers.queryAnswer(this.messageId, userId);
     }
 }
