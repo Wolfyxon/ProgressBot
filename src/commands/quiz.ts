@@ -1,6 +1,8 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ModalBuilder, SlashCommandBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import Command from "../command";
 
+const answerLetters = ["a", "b", "c", "d"];
+
 export default new Command()
     .makeTeacherOnly()
     .setBuilder(
@@ -11,11 +13,23 @@ export default new Command()
             .addNumberOption(opt => opt
                 .setName("reward")
                 .setDescription("Reward XP for answering correctly")
+                .setRequired(true)
+            )
+            .addStringOption(opt => opt
+                .setName("correct")
+                .setDescription("Correct answer letter")
+                .setRequired(true)
+                .addChoices(
+                    answerLetters.map(l => {
+                        return { name: l.toUpperCase(), value: l }
+                    })
+                )
             )
     )
     .setRun(async (ctx) => {
-        const answerLetters = ["a", "b", "c", "d"];
-
+        const correctAnswer = ctx.interaction.options.getString("correct", true);
+        const reward = ctx.interaction.options.getNumber("reward", true);
+        
         await ctx.interaction.showModal(
             new ModalBuilder()
                 .setTitle("Quiz")
@@ -31,14 +45,19 @@ export default new Command()
                         )
                 )
                 .addComponents(answerLetters.map((l, i) => {
+                    const label = `Answer ${l.toUpperCase()}`;
+                    
                     const input = new TextInputBuilder()
                         .setCustomId(l)
-                        .setLabel(`Answer ${l.toUpperCase()}`)
                         .setStyle(TextInputStyle.Short);
 
-                    if(i > 1) {
+                    if(l == correctAnswer) {
+                        input.setLabel(`✅ ${label}`);
+                        input.setRequired(true);
+                    } else {
+                        input.setLabel(`❌ ${label}`);
                         input.setRequired(false);
-                    } 
+                    }
 
                     return new ActionRowBuilder<TextInputBuilder>()
                         .addComponents(input);
@@ -46,7 +65,6 @@ export default new Command()
         );
 
         const modalInt = await ctx.awaitModalSubmit("quizCreation");
-        const reward = ctx.interaction.options.getNumber("reward", true);
 
         const description = modalInt.fields.getTextInputValue("description");
         const answers: string[] = [];
