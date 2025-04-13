@@ -57,6 +57,24 @@ export default class Database {
         );
     }
 
+    public queryAllAs<T>(sql: string, ...params: any[]): DbResult<T[]> {
+        const res = this.queryAll(sql, ...params);
+
+        return new DbResult<T[]> (
+            res.statement,
+            res.value.map(v => v as T)
+        );
+    }
+
+    public queryAs<T>(sql: string, ...params: any[]): DbResult<T> {
+        const res = this.query(sql, ...params);
+
+        return new DbResult<T> (
+            res.statement,
+            res.value as T
+        );
+    }
+
     public query(sql: string, ...params: any[]): DbResult<any> {
         const q = this.db.prepare(sql);
 
