@@ -1,4 +1,4 @@
-import { ButtonInteraction, ChatInputCommandInteraction, Interaction } from "discord.js";
+import { ButtonInteraction, ChatInputCommandInteraction, Interaction, ModalSubmitInteraction } from "discord.js";
 import Database from "./db/database";
 import { DbGuild } from "./db/guilds";
 import BotContext from "./botContext";
@@ -54,7 +54,17 @@ export class CommandContext<T extends Interaction> {
     }
 }
 
-export class CommandRunContext extends CommandContext<ChatInputCommandInteraction> {}
+export class CommandRunContext extends CommandContext<ChatInputCommandInteraction> {
+    public async awaitModalSubmit(id: string): Promise<ModalSubmitInteraction> {
+        return await this.interaction.awaitModalSubmit({
+            filter: i =>
+                i.customId == id &&
+                i.user.id == this.interaction.user.id,
+            time: 60000
+        })
+    }
+}
+
 export class CommandButtonContext extends CommandContext<ButtonInteraction> {}
 
 export function getComponentId(commandName: string, componentName: string): string {
