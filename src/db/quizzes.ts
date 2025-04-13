@@ -1,4 +1,4 @@
-import Database from "./database";
+import Database, { DbResult } from "./database";
 import DbTable from "./table";
 
 export type RawDbQuiz = {
@@ -38,6 +38,12 @@ export class Quizzes extends DbTable {
                 UNIQUE (messageId)
             )
         `);
+    }
+
+    public queryQuiz(messageId: string): DbResult<RawDbQuiz> {
+        return this.db.queryAs(
+            `SELECT * FROM ${this.name} WHERE messageId = ?`
+        , messageId);
     }
 }
 
