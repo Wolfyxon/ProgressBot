@@ -1,4 +1,4 @@
-import Database, { DbResult } from "./database";
+import Database, { DbResult, DbRunResult } from "./database";
 import DbTable from "./table";
 
 export enum AnswerId {
@@ -66,7 +66,7 @@ export class QuizAnswers extends DbTable {
                 userId VARCHAR(20) NOT NULL,
                 answerId INTEGER NOT NULL,
 
-                UNIQUE (userId)
+                UNIQUE (messageId, userId)
             )
         `);
     }
