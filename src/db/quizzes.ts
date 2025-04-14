@@ -88,6 +88,12 @@ export class Quizzes extends DbTable {
         `);
     }
 
+    public queryQuizzes(): DbResult<RawDbQuiz[]> {
+        return this.db.queryAllAs(
+            `SELECT * FROM ${this.name}`
+        );
+    }
+
     public queryQuiz(messageId: string): DbResult<RawDbQuiz | null> {
         return this.db.queryAs(
             `SELECT * FROM ${this.name} WHERE messageId = ?`
