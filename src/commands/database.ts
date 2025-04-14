@@ -56,11 +56,14 @@ export default new Command()
     )
     .setRun(async (ctx) => {
         function dangerCheck(query: string): boolean {
+            query = query.toLowerCase();
             const dangerMode = ctx.interaction.options.getBoolean("dangerous", false) ?? false;
 
             if(!dangerMode) {
-                if(query.includes("UPDATE") && !query.includes("WHERE")) {
-                    ctx.interaction.editReply(":warning: `UPDATE` must be paired with `WHERE` or you'll destroy the database. \nUse with **dangerous** to run anyway.");
+                const hasDangerous = query.includes("update") || query.includes("delete");
+
+                if(hasDangerous && !query.includes("where")) {
+                    ctx.interaction.editReply(":warning: `UPDATE` and `DELETE` must be used with `WHERE` or you'll destroy the database. \nUse with **dangerous** to run anyway.");
                     return false;
                 }
             }
