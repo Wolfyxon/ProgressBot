@@ -2,8 +2,89 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, MessageFlag
 import Command from "../command";
 import { Answer } from "../db/quizzes";
 import { wait } from "../utils";
+import { CommandContext } from "../commandContext";
 
 const answerLetters = ["a", "b", "c", "d"];
+
+export async function showQuizModal(ctx: CommandContext<any>, correctAnswer: string, reward: number, answers?: string[]) {
+    const correctAnswerIdx = answerLetters.indexOf(correctAnswer);
+
+    await ctx.interaction.showModal(
+        new ModalBuilder()
+            .setTitle("Quiz")
+            .setCustomId("quizCreation")
+            .addComponents(
+                new ActionRowBuilder<TextInputBuilder>()
+                    .addComponents(
+                        new TextInputBuilder()
+                            .setLabel("Quiz description")
+                            .setCustomId("description")
+                            .setRequired(true)
+                            .setStyle(TextInputStyle.Paragraph),
+                    )
+            )
+            .addComponents(answerLetters.map((l, i) => {
+                const label = `Answer ${l.toUpperCase()}`;
+                
+                const input = new TextInputBuilder()
+                    .setCustomId(l)
+                    .setStyle(TextInputStyle.Paragraph);
+
+                if(l == correctAnswer) {
+                    input.setLabel(`✅ ${label}`);
+                } else {
+                    input.setLabel(`❌ ${label}`);
+                }
+                
+                input.setRequired(i <= correctAnswerIdx);
+
+                return new ActionRowBuilder<TextInputBuilder>()
+                    .addComponents(input);
+            }))
+    );
+
+    const modalInt = await ctx.awaitModalSubmit("quizCreation");
+
+    const description = modalInt.fields.getTextInputValue("description");
+    answers = answers ?? [];
+
+    answerLetters.forEach(l => {
+        const val = modalInt.fields.getTextInputValue(l);
+
+        if(val) {
+            answers.push(val);
+        }
+    });
+    
+    const rewardText = ctx.getTranslation({
+        en: "Reward",
+        pl: "Nagroda"
+    });
+
+    return await modalInt.reply({
+        embeds: [
+            new EmbedBuilder()
+                .setDescription(
+                    [
+                        description,
+                        answers.map((ans, i) => `:regional_indicator_${answerLetters[i]}: ${ans}`).join("\n"),
+                        `:star: **${rewardText}:** \`${reward}\` XP`
+                        
+                    ].join("\n\n")
+                )
+        ],
+        components: [
+            new ActionRowBuilder<ButtonBuilder>()
+                .addComponents(answers.map((ans, i) => 
+                    new ButtonBuilder()
+                        .setCustomId(ctx.getComponentId(answerLetters[i]))
+                        .setLabel(answerLetters[i].toUpperCase())
+                        .setStyle(i + 1)
+                ))
+        ],
+        withResponse: true
+    });
+}
 
 const command = new Command()
     .makeTeacherOnly()
@@ -32,88 +113,11 @@ const command = new Command()
         const correctAnswer = ctx.interaction.options.getString("correct", true);
         const reward = ctx.interaction.options.getNumber("reward", true);
         
-        const correctAnswerIdx = answerLetters.indexOf(correctAnswer);
-
-        await ctx.interaction.showModal(
-            new ModalBuilder()
-                .setTitle("Quiz")
-                .setCustomId("quizCreation")
-                .addComponents(
-                    new ActionRowBuilder<TextInputBuilder>()
-                        .addComponents(
-                            new TextInputBuilder()
-                                .setLabel("Quiz description")
-                                .setCustomId("description")
-                                .setRequired(true)
-                                .setStyle(TextInputStyle.Paragraph),
-                        )
-                )
-                .addComponents(answerLetters.map((l, i) => {
-                    const label = `Answer ${l.toUpperCase()}`;
-                    
-                    const input = new TextInputBuilder()
-                        .setCustomId(l)
-                        .setStyle(TextInputStyle.Paragraph);
-
-                    if(l == correctAnswer) {
-                        input.setLabel(`✅ ${label}`);
-                    } else {
-                        input.setLabel(`❌ ${label}`);
-                    }
-                    
-                    input.setRequired(i <= correctAnswerIdx);
-
-                    return new ActionRowBuilder<TextInputBuilder>()
-                        .addComponents(input);
-                }))
-        );
-
         try {
-            const modalInt = await ctx.awaitModalSubmit("quizCreation");
-
-            const description = modalInt.fields.getTextInputValue("description");
-            const answers: string[] = [];
-
-            answerLetters.forEach(l => {
-                const val = modalInt.fields.getTextInputValue(l);
-
-                if(val) {
-                    answers.push(val);
-                }
-            });
-            
-            const rewardText = ctx.getTranslation({
-                en: "Reward",
-                pl: "Nagroda"
-            });
-
-            const reply = await modalInt.reply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setDescription(
-                            [
-                                description,
-                                answers.map((ans, i) => `:regional_indicator_${answerLetters[i]}: ${ans}`).join("\n"),
-                                `:star: **${rewardText}:** \`${reward}\` XP`
-                                
-                            ].join("\n\n")
-                        )
-                ],
-                components: [
-                    new ActionRowBuilder<ButtonBuilder>()
-                        .addComponents(answers.map((ans, i) => 
-                            new ButtonBuilder()
-                                .setCustomId(ctx.getComponentId(answerLetters[i]))
-                                .setLabel(answerLetters[i].toUpperCase())
-                                .setStyle(i + 1)
-                        ))
-                ],
-                withResponse: true
-            });
-            
-            ctx.db.quizzes.addQuiz(reply.resource!.message!.id, correctAnswer, reward);
+            const res = await showQuizModal(ctx, correctAnswer, reward);
+            ctx.db.quizzes.addQuiz(res.resource!.message!.id, correctAnswer, reward);
         } catch {
-
+            // Modal timeout
         }
     });
 
