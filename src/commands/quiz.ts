@@ -6,7 +6,7 @@ import { CommandContext } from "../commandContext";
 
 const answerLetters = ["a", "b", "c", "d"];
 
-export async function showQuizModal(ctx: CommandContext<any>, correctAnswer: string, reward: number, answers?: string[]) {
+export async function showQuizModal(ctx: CommandContext<any>, correctAnswer: string, reward: number, initDescription?: string, initAnswers?: string[]) {
     const correctAnswerIdx = answerLetters.indexOf(correctAnswer);
 
     await ctx.interaction.showModal(
@@ -46,7 +46,7 @@ export async function showQuizModal(ctx: CommandContext<any>, correctAnswer: str
     const modalInt = await ctx.awaitModalSubmit("quizCreation");
 
     const description = modalInt.fields.getTextInputValue("description");
-    answers = answers ?? [];
+    const answers: string[] = [];
 
     answerLetters.forEach(l => {
         const val = modalInt.fields.getTextInputValue(l);
