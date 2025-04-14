@@ -3,7 +3,7 @@ import { getRelativeXpForNextLevel } from "../xpMath";
 import Command from "../command";
 import { CommandContext } from "../commandContext";
 
-export function getLeaderboardMessage(ctx: CommandContext): MessagePayload | BaseMessageOptions | string {
+export function getLeaderboardMessage(ctx: CommandContext<any>): MessagePayload | BaseMessageOptions | string {
     const res = ctx.db.users.queryLeaderboard(ctx.interaction.guildId!);
     const users = res.value;
 
