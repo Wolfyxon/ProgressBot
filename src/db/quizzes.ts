@@ -40,6 +40,13 @@ export class QuizManager {
         return this.quizzes.addQuiz(messageId, correctAnswer, rewardXp);
     }
 
+    public removeQuiz(messageId: string): DbRunResult {
+        return this.db.run(
+            `DELETE FROM ${this.quizzes.name} WHERE messageId = ?;
+             DELETE FROM ${this.answers.name} WHERE messageId = ?`
+        , messageId, messageId);
+    }
+
     public queryQuiz(messageId: string): DbResult<Quiz | null> {
         const raw = this.quizzes.queryQuiz(messageId);
 
