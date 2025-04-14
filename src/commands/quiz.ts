@@ -115,6 +115,10 @@ const command = new Command()
 
 answerLetters.forEach(letter => {
     command.addButtonHandler(letter, async (ctx) => {
+        await ctx.interaction.deferReply({
+            flags: MessageFlags.Ephemeral
+        });
+
         const messageId = ctx.interaction.message.id;
         const userId = ctx.interaction.user.id;
 
@@ -122,14 +126,12 @@ answerLetters.forEach(letter => {
         const quiz = quizRes.value;
         
         if(!quiz) {
-            ctx.interaction.reply({
+            ctx.interaction.editReply({
                 content: ":x: " + ctx.getTranslation({
                     en: "This quiz is somehow not in the database. Contact Wolfyxon",
                     pl: "Tego quizu z jakiegoś powodu nie ma w bazie danych, powiadom Wolfyxona"
-                }),
-
-                flags: MessageFlags.Ephemeral
-            })
+                })
+            });
 
             return;
         }
@@ -140,13 +142,11 @@ answerLetters.forEach(letter => {
         if(answer) {
             const userAnswerText = `**${answer.answer.toString().toUpperCase()}**`;
 
-            ctx.interaction.reply({
+            ctx.interaction.editReply({
                 content: ctx.getTranslation({
                     en: `You've already answered ${userAnswerText}! \nThe correct answer is: ${correctAnswerText}.`,
                     pl: `Już odpowiedziałeś ${userAnswerText}! \nPoprawna odpowiedź to: ${correctAnswerText}.`
-                }),
-
-                flags: MessageFlags.Ephemeral
+                })
             });
 
             return;
@@ -157,14 +157,12 @@ answerLetters.forEach(letter => {
         try {
             answerAddRes = ctx.db.quizzes.answers.addAnswer(messageId, userId, letter as Answer);
         } catch (e) {
-            ctx.interaction.reply({
+            ctx.interaction.editReply({
                 content: ":x: " + ctx.getTranslation({
                     en: "An error ocurred while submitting your answer. Contact Wolfyxon",
                     pl: "Przy wysyłaniu odpowiedzi nastąpił błąd. Powiadom Wolfyxona"
                 }) + `\n \`\`\`\n${e}\`\`\``,
-
-                flags: MessageFlags.Ephemeral
-            })
+            });
         }
 
         const embed = new EmbedBuilder();
@@ -202,9 +200,8 @@ answerLetters.forEach(letter => {
             embed.setColor("Red");
         }
 
-        ctx.interaction.reply({
-            embeds: [embed],
-            flags: MessageFlags.Ephemeral
+        ctx.interaction.editReply({
+            embeds: [embed]
         });
     });
 });
