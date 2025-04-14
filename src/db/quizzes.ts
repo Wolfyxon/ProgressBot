@@ -1,3 +1,4 @@
+import { wait } from "../utils";
 import Database, { DbResult, DbRunResult } from "./database";
 import DbTable from "./table";
 
@@ -41,6 +42,32 @@ export class QuizManager {
     public setup() {
         this.quizzes.setup();
         this.answers.setup();
+    }
+
+    public cleanup() {
+        const quizzes = this.quizzes.queryQuizzes().value;
+
+        quizzes.forEach(async q => {
+            const mgr = this;
+            
+            function remove() {
+                console.log(`Removing quiz: ${q.quizId}`);
+                mgr.removeQuiz(q.quizId);
+            }
+
+            const channel = await this.db.botCtx.client!.channels.cache.get(q.channelId);
+            
+            if(!channel || !channel.isTextBased()) {
+                remove();
+                return;
+            }
+
+            const msg = await channel.messages.cache.get(q.messageId);
+
+            if(!msg) {
+                remove();
+            }
+        });
     }
 
     public addQuiz(channelId: string, messageId: string, correctAnswer: string, rewardXp: number): DbRunResult {
