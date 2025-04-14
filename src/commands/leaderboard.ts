@@ -25,8 +25,8 @@ export function getLeaderboardMessage(ctx: CommandContext): MessagePayload | Bas
     if(users.length == 0) {
         lines = [
             ctx.getTranslation({
-                en: "No leaderboard entries yet",
-                pl: "Brak wpisów do tablicy wyników"
+                en: "No entries yet",
+                pl: "Brak wpisów"
             })
         ];
     }
