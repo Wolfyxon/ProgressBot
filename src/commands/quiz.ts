@@ -113,10 +113,7 @@ const command = new Command()
             
             ctx.db.quizzes.addQuiz(reply.resource!.message!.id, correctAnswer, reward);
         } catch {
-            ctx.interaction.followUp({
-                content: "Timed out",
-                flags: MessageFlags.Ephemeral
-            })
+            
         }
     });
 
