@@ -17,7 +17,7 @@ export type RawDbQuiz = {
 export type RawDbQuizAnswer = {
     messageId: string,
     userId: string,
-    answer: number
+    answer: Answer
 }
 
 export class QuizManager {
