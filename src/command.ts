@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { ButtonInteraction, ChatInputCommandInteraction, MessageFlags, REST, Routes, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from "discord.js";
-import { CommandButtonContext, CommandRunContext, getComponentId } from "./commandContext";
+import { CommandButtonContext, CommandRunContext, getComponentId } from "./interactionContext";
 import BotContext from "./botContext";
 
 export type UniversalCommandBuilder = SlashCommandBuilder | SlashCommandOptionsOnlyBuilder | SlashCommandSubcommandsOnlyBuilder;

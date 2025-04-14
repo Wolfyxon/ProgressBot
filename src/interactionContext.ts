@@ -9,7 +9,7 @@ export type TranslationTable = {
     en: string
 };
 
-export class CommandContext<T extends Interaction> {
+export class InteractionContext<T extends Interaction> {
     command: Command;
     interaction: T;
     botCtx: BotContext;
@@ -67,9 +67,9 @@ export class CommandContext<T extends Interaction> {
     }
 }
 
-export class CommandRunContext extends CommandContext<ChatInputCommandInteraction> {}
+export class CommandRunContext extends InteractionContext<ChatInputCommandInteraction> {}
 
-export class CommandButtonContext extends CommandContext<ButtonInteraction> {}
+export class CommandButtonContext extends InteractionContext<ButtonInteraction> {}
 
 export function getComponentId(commandName: string, componentName: string): string {
     return `${commandName}_${componentName}`;

@@ -2,11 +2,11 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, MessageFlag
 import Command from "../command";
 import { Answer } from "../db/quizzes";
 import { wait } from "../utils";
-import { CommandContext } from "../commandContext";
+import { InteractionContext } from "../interactionContext";
 
 const answerLetters = ["a", "b", "c", "d"];
 
-export async function showQuizModal(ctx: CommandContext<any>, correctAnswer: string, reward: number, initDescription?: string, initAnswers?: string[]) {
+export async function showQuizModal(ctx: InteractionContext<any>, correctAnswer: string, reward: number, initDescription?: string, initAnswers?: string[]) {
     const correctAnswerIdx = answerLetters.indexOf(correctAnswer);
 
     await ctx.interaction.showModal(

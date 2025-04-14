@@ -1,9 +1,9 @@
 import { ActionRowBuilder, BaseMessageOptions, ButtonBuilder, ButtonStyle, EmbedBuilder, MessagePayload, SlashCommandBuilder } from "discord.js";
 import { getRelativeXpForNextLevel } from "../xpMath";
 import Command from "../command";
-import { CommandContext } from "../commandContext";
+import { InteractionContext } from "../interactionContext";
 
-export function getLeaderboardMessage(ctx: CommandContext<any>): MessagePayload | BaseMessageOptions | string {
+export function getLeaderboardMessage(ctx: InteractionContext<any>): MessagePayload | BaseMessageOptions | string {
     const res = ctx.db.users.queryLeaderboard(ctx.interaction.guildId!);
     const users = res.value;
 
