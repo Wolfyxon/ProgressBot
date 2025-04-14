@@ -52,10 +52,12 @@ export class CommandContext<T extends Interaction> {
     public getTranslation(translations: TranslationTable): string {
         return translations[this.getLang()] ?? translations.en;
     }
-}
 
-export class CommandRunContext extends CommandContext<ChatInputCommandInteraction> {
     public async awaitModalSubmit(id: string): Promise<ModalSubmitInteraction> {
+        if(!this.interaction.isButton() && !this.interaction.isCommand()) {
+            throw "Modals not supported for this interaction";
+        }
+        
         return await this.interaction.awaitModalSubmit({
             filter: i =>
                 i.customId == id &&
@@ -64,6 +66,8 @@ export class CommandRunContext extends CommandContext<ChatInputCommandInteractio
         })
     }
 }
+
+export class CommandRunContext extends CommandContext<ChatInputCommandInteraction> {}
 
 export class CommandButtonContext extends CommandContext<ButtonInteraction> {}
 
