@@ -57,6 +57,19 @@ export class QuizManager {
         }
     }
 
+    public removeQuizzes(messageIds: string[]): QuizRemoveResult {
+        const idString = `(${messageIds.toString()})`;
+
+        return {
+            quizzes: this.db.run(
+                `DELETE FROM ${this.quizzes.name} WHERE messageId IN ${idString}`
+            ),
+            answers: this.db.run(
+                `DELETE FROM ${this.answers.name} WHERE messageId IN ${idString}`
+            )
+        }
+    }
+
     public queryQuiz(messageId: string): DbResult<Quiz | null> {
         const raw = this.quizzes.queryQuiz(messageId);
 
