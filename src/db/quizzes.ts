@@ -21,10 +21,12 @@ export type RawDbQuizAnswer = {
 }
 
 export class QuizManager {
+    db: Database;
     quizzes: Quizzes;
     answers: QuizAnswers;
 
     constructor(db: Database) {
+        this.db = db;
         this.quizzes = new Quizzes(db);
         this.answers = new QuizAnswers(db);
     }
