@@ -68,49 +68,56 @@ const command = new Command()
                 }))
         );
 
-        const modalInt = await ctx.awaitModalSubmit("quizCreation");
+        try {
+            const modalInt = await ctx.awaitModalSubmit("quizCreation");
 
-        const description = modalInt.fields.getTextInputValue("description");
-        const answers: string[] = [];
+            const description = modalInt.fields.getTextInputValue("description");
+            const answers: string[] = [];
 
-        answerLetters.forEach(l => {
-            const val = modalInt.fields.getTextInputValue(l);
+            answerLetters.forEach(l => {
+                const val = modalInt.fields.getTextInputValue(l);
 
-            if(val) {
-                answers.push(val);
-            }
-        });
-        
-        const rewardText = ctx.getTranslation({
-            en: "Reward",
-            pl: "Nagroda"
-        });
+                if(val) {
+                    answers.push(val);
+                }
+            });
+            
+            const rewardText = ctx.getTranslation({
+                en: "Reward",
+                pl: "Nagroda"
+            });
 
-        const reply = await modalInt.reply({
-            embeds: [
-                new EmbedBuilder()
-                    .setDescription(
-                        [
-                            description,
-                            answers.map((ans, i) => `:regional_indicator_${answerLetters[i]}: ${ans}`).join("\n"),
-                            `:star: **${rewardText}:** \`${reward}\` XP`
-                            
-                        ].join("\n\n")
-                    )
-            ],
-            components: [
-                new ActionRowBuilder<ButtonBuilder>()
-                    .addComponents(answers.map((ans, i) => 
-                        new ButtonBuilder()
-                            .setCustomId(ctx.getComponentId(answerLetters[i]))
-                            .setLabel(answerLetters[i].toUpperCase())
-                            .setStyle(i + 1)
-                    ))
-            ],
-            withResponse: true
-        });
-        
-        ctx.db.quizzes.addQuiz(reply.resource!.message!.id, correctAnswer, reward);
+            const reply = await modalInt.reply({
+                embeds: [
+                    new EmbedBuilder()
+                        .setDescription(
+                            [
+                                description,
+                                answers.map((ans, i) => `:regional_indicator_${answerLetters[i]}: ${ans}`).join("\n"),
+                                `:star: **${rewardText}:** \`${reward}\` XP`
+                                
+                            ].join("\n\n")
+                        )
+                ],
+                components: [
+                    new ActionRowBuilder<ButtonBuilder>()
+                        .addComponents(answers.map((ans, i) => 
+                            new ButtonBuilder()
+                                .setCustomId(ctx.getComponentId(answerLetters[i]))
+                                .setLabel(answerLetters[i].toUpperCase())
+                                .setStyle(i + 1)
+                        ))
+                ],
+                withResponse: true
+            });
+            
+            ctx.db.quizzes.addQuiz(reply.resource!.message!.id, correctAnswer, reward);
+        } catch {
+            ctx.interaction.followUp({
+                content: "Timed out",
+                flags: MessageFlags.Ephemeral
+            })
+        }
     });
 
 answerLetters.forEach(letter => {
