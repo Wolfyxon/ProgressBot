@@ -114,8 +114,10 @@ const command = new Command()
         const reward = ctx.interaction.options.getNumber("reward", true);
         
         try {
-            const res = await showQuizModal(ctx, correctAnswer, reward);
-            ctx.db.quizzes.addQuiz(res.resource!.message!.id, correctAnswer, reward);
+            const modal = await showQuizModal(ctx, correctAnswer, reward);
+            const res = modal.resource!;
+
+            ctx.db.quizzes.addQuiz(res.message!.channelId, res.message!.id, correctAnswer, reward);
         } catch {
             // Modal timeout
         }
@@ -127,10 +129,11 @@ answerLetters.forEach(letter => {
             flags: MessageFlags.Ephemeral
         });
 
+        const channelId = ctx.interaction.channelId;
         const messageId = ctx.interaction.message.id;
         const userId = ctx.interaction.user.id;
 
-        const quizRes = ctx.db.quizzes.queryQuiz(messageId);
+        const quizRes = ctx.db.quizzes.queryQuizByMessage(channelId, messageId);
         const quiz = quizRes.value;
         
         if(!quiz) {
@@ -180,7 +183,7 @@ answerLetters.forEach(letter => {
         let answerAddRes;
 
         try {
-            answerAddRes = ctx.db.quizzes.answers.addAnswer(messageId, userId, letter as Answer);
+            answerAddRes = ctx.db.quizzes.answers.addAnswer(quiz.quizId, userId, letter as Answer);
         } catch (e) {
             ctx.interaction.editReply({
                 content: ":x: " + ctx.getTranslation({

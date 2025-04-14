@@ -9,13 +9,15 @@ export enum Answer {
 }
 
 export type RawDbQuiz = {
-    messageId: string;
+    quizId: number,
+    channelId: string,
+    messageId: string,
     correctAnswer: Answer,
     rewardXp: number
 }
 
 export type RawDbQuizAnswer = {
-    messageId: string,
+    quizId: string,
     userId: string,
     answer: Answer
 }
@@ -41,37 +43,57 @@ export class QuizManager {
         this.answers.setup();
     }
 
-    public addQuiz(messageId: string, correctAnswer: string, rewardXp: number): DbRunResult {
-        return this.quizzes.addQuiz(messageId, correctAnswer, rewardXp);
+    public addQuiz(channelId: string, messageId: string, correctAnswer: string, rewardXp: number): DbRunResult {
+        return this.quizzes.addQuiz(channelId, messageId, correctAnswer, rewardXp);
     }
 
-    public removeQuiz(messageId: string): QuizRemoveResult {
+    public removeQuiz(quizId: number): QuizRemoveResult {
+        const answersRes = this.db.run(
+            `DELETE FROM ${this.answers.name} WHERE quizId = ?`
+        , quizId);
+
+        const quizRes = this.db.run(
+            `DELETE FROM ${this.quizzes.name} WHERE quizId = ?`
+        , quizId);
+
         return {
-            quizzes: this.db.run(
-                `DELETE FROM ${this.quizzes.name} WHERE messageId = ?`
-            , messageId),
-            
-            answers: this.db.run(
-                `DELETE FROM ${this.answers.name} WHERE messageId = ?`
-            , messageId) 
+            quizzes: quizRes,
+            answers: answersRes
         }
     }
 
-    public removeQuizzes(messageIds: string[]): QuizRemoveResult {
-        const idString = `(${messageIds.toString()})`;
+    public removeQuizzes(quizIds: string[]): QuizRemoveResult {
+        const idString = `(${quizIds.toString()})`;
+
+        const answersRes = this.db.run(
+            `DELETE FROM ${this.answers.name} WHERE quizId IN ${idString}`
+        );
+
+        const quizzesRes = this.db.run(
+            `DELETE FROM ${this.quizzes.name} WHERE quizId IN ${idString}`
+        );
 
         return {
-            quizzes: this.db.run(
-                `DELETE FROM ${this.quizzes.name} WHERE messageId IN ${idString}`
-            ),
-            answers: this.db.run(
-                `DELETE FROM ${this.answers.name} WHERE messageId IN ${idString}`
-            )
+            quizzes: quizzesRes, 
+            answers: answersRes
         }
     }
 
-    public queryQuiz(messageId: string): DbResult<Quiz | null> {
-        const raw = this.quizzes.queryQuiz(messageId);
+    public queryQuiz(quizId: string): DbResult<Quiz | null> {
+        const raw = this.quizzes.queryQuiz(quizId);
+
+        if(!raw.value) {
+            return new DbResult(raw.statement, null);
+        }
+
+        return new DbResult(
+            raw.statement,
+            new Quiz(this, raw.value as RawDbQuiz)
+        )
+    }
+
+    public queryQuizByMessage(channelId: string, messageId: string): DbResult<Quiz | null> {
+        const raw = this.quizzes.queryQuizByMessage(channelId, messageId);
 
         if(!raw.value) {
             return new DbResult(raw.statement, null);
@@ -92,11 +114,13 @@ export class Quizzes extends DbTable {
     public setup() {
         this.db.db.exec(`
             CREATE TABLE IF NOT EXISTS ${this.name} (
+                quizId INTEGER PRIMARY KEY AUTOINCREMENT,
+                channelId VARCHAR(20) NOT NULL,
                 messageId VARCHAR(20) NOT NULL,
                 correctAnswer VARCHAR(1) NOT NULL,
                 rewardXp INTEGER NOT NULL,
 
-                UNIQUE (messageId)
+                UNIQUE (messageId, channelId)
             )
         `);
     }
@@ -107,16 +131,22 @@ export class Quizzes extends DbTable {
         );
     }
 
-    public queryQuiz(messageId: string): DbResult<RawDbQuiz | null> {
+    public queryQuiz(quizId: string): DbResult<RawDbQuiz | null> {
         return this.db.queryAs(
-            `SELECT * FROM ${this.name} WHERE messageId = ?`
-        , messageId);
+            `SELECT * FROM ${this.name} WHERE quizId = ?`
+        , quizId);
     }
 
-    public addQuiz(messageId: string, correctAnswer: string, rewardXp: number): DbRunResult {
+    public queryQuizByMessage(channelId: string, messageId: string): DbResult<RawDbQuiz | null> {
+        return this.db.queryAs(
+            `SELECT * FROM ${this.name} WHERE channelId = ? AND messageId = ?`
+        , channelId, messageId);
+    }
+
+    public addQuiz(channelId: string, messageId: string, correctAnswer: string, rewardXp: number): DbRunResult {
         return this.db.run(
-            `INSERT INTO ${this.name} (messageId, correctAnswer, rewardXp) VALUES(?, ?, ?)`
-        , messageId, correctAnswer, rewardXp);
+            `INSERT INTO ${this.name} (channelId, messageId, correctAnswer, rewardXp) VALUES(?, ?, ?, ?)`
+        , channelId, messageId, correctAnswer, rewardXp);
     }
 }
 
@@ -128,54 +158,54 @@ export class QuizAnswers extends DbTable {
     public setup() {
         this.db.db.exec(`
             CREATE TABLE IF NOT EXISTS ${this.name} (
-                messageId VARCHAR(20) NOT NULL,
+                quizId INTEGER NOT NULL,
                 userId VARCHAR(20) NOT NULL,
                 answer VARCHAR(1) NOT NULL,
 
-                UNIQUE (messageId, userId)
+                UNIQUE (quizId, userId)
             )
         `);
     }
 
-    public queryAnswers(messageId: string): DbResult<RawDbQuizAnswer[]> {
+    public queryAnswers(quizId: number): DbResult<RawDbQuizAnswer[]> {
         return this.db.queryAllAs(
-            `SELECT * FROM ${this.name} WHERE messageId = ?`
-        , messageId);
+            `SELECT * FROM ${this.name} WHERE quizId = ?`
+        , quizId);
     }
 
-    public queryAnswer(messageId: string, userId: string): DbResult<RawDbQuizAnswer | null> {
+    public queryAnswer(quizId: number, userId: string): DbResult<RawDbQuizAnswer | null> {
         return this.db.queryAs(
-            `SELECT answer FROM ${this.name} WHERE messageId = ? AND userId = ?`
-        , messageId, userId);
+            `SELECT answer FROM ${this.name} WHERE quizId = ? AND userId = ?`
+        , quizId, userId);
     }
 
-    public addAnswer(messageId: string, userId: string, answer: Answer): DbRunResult {
+    public addAnswer(quizId: number, userId: string, answer: Answer): DbRunResult {
         return this.db.run(
-            `INSERT INTO ${this.name} (messageId, userId, answer) VALUES (?, ?, ?)`
-        , messageId, userId, answer);
+            `INSERT INTO ${this.name} (quizId, userId, answer) VALUES (?, ?, ?)`
+        , quizId, userId, answer);
     }
 }
 
-
-
 export class Quiz {
     mgr: QuizManager;
+    quizId: number;
     messageId: string;
     correctAnswer: string;
     rewardXp: number;
 
     constructor(mgr: QuizManager, data: RawDbQuiz) {
         this.mgr = mgr;
+        this.quizId = data.quizId;
         this.messageId = data.messageId;
         this.correctAnswer = data.correctAnswer;
         this.rewardXp = data.rewardXp;
     }
 
     public queryAnswers(): DbResult<RawDbQuizAnswer[]> {
-        return this.mgr.answers.queryAnswers(this.messageId);
+        return this.mgr.answers.queryAnswers(this.quizId);
     }
 
     public queryAnswer(userId: string): DbResult<RawDbQuizAnswer | null> {
-        return this.mgr.answers.queryAnswer(this.messageId, userId);
+        return this.mgr.answers.queryAnswer(this.quizId, userId);
     }
 }
