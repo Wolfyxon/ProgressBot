@@ -1,6 +1,6 @@
 import { ButtonInteraction, ChatInputCommandInteraction, Interaction, ModalSubmitInteraction } from "discord.js";
-import Database from "./db/database";
 import { DbGuild } from "./db/guilds";
+import Database from "./db/database";
 import BotContext from "./botContext";
 import Command from "./command";
 
@@ -68,7 +68,6 @@ export class InteractionContext<T extends Interaction> {
 }
 
 export class CommandRunContext extends InteractionContext<ChatInputCommandInteraction> {}
-
 export class CommandButtonContext extends InteractionContext<ButtonInteraction> {}
 
 export function getComponentId(commandName: string, componentName: string): string {
