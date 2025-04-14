@@ -53,7 +53,7 @@ const command = new Command()
                     
                     const input = new TextInputBuilder()
                         .setCustomId(l)
-                        .setStyle(TextInputStyle.Short);
+                        .setStyle(TextInputStyle.Paragraph);
 
                     if(l == correctAnswer) {
                         input.setLabel(`✅ ${label}`);
@@ -113,7 +113,7 @@ const command = new Command()
             
             ctx.db.quizzes.addQuiz(reply.resource!.message!.id, correctAnswer, reward);
         } catch {
-            
+
         }
     });
 
