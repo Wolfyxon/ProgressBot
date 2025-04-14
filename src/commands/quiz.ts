@@ -152,8 +152,10 @@ answerLetters.forEach(letter => {
             return;
         }
 
+        let answerAddRes;
+
         try {
-            ctx.db.quizzes.answers.addAnswer(messageId, userId, letter as Answer);
+            answerAddRes = ctx.db.quizzes.answers.addAnswer(messageId, userId, letter as Answer);
         } catch (e) {
             ctx.interaction.reply({
                 content: ":x: " + ctx.getTranslation({
@@ -170,6 +172,11 @@ answerLetters.forEach(letter => {
         if(letter == quiz.correctAnswer) {
             const rewardText = `\`${quiz.rewardXp}\``;
 
+            const user = ctx.db.users.getUser(ctx.interaction.guildId!, ctx.interaction.user.id);
+            await wait(0.1);
+
+            const xpAddRes = user.addXp(quiz.rewardXp);
+
             embed.setTitle(":tada: " + ctx.getTranslation({
                 en: `Correct!`,
                 pl: `Dobrze!`
@@ -178,14 +185,9 @@ answerLetters.forEach(letter => {
             embed.setDescription(ctx.getTranslation({
                 en: `You get ${rewardText} XP.`,
                 pl: `Otrzymujesz ${rewardText} XP.`
-            }));
+            }) + "\n" +  answerAddRes!.getCodeBlock() + xpAddRes.getCodeBlock());
 
             embed.setColor("Green");
-
-            const user = ctx.db.users.getUser(ctx.interaction.guildId!, ctx.interaction.user.id);
-            await wait(0.1);
-
-            user.addXp(quiz.rewardXp);
         } else {
             embed.setTitle(":face_with_diagonal_mouth: " + ctx.getTranslation({
                 en: "Wrong answer",
@@ -195,7 +197,7 @@ answerLetters.forEach(letter => {
             embed.setDescription(ctx.getTranslation({
                 en: `The correct answer is: ${correctAnswerText}. \nBetter luck next time!`,
                 pl: `Poprawna odpowiedź to: ${correctAnswerText}. \nPowodzenia innym razem!`
-            }));
+            }) + "\n" +  answerAddRes!.getCodeBlock());
 
             embed.setColor("Red");
         }
