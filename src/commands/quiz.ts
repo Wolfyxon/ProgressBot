@@ -141,12 +141,29 @@ answerLetters.forEach(letter => {
 
         if(answer) {
             const userAnswerText = `**${answer.answer.toString().toUpperCase()}**`;
+            const embed = new EmbedBuilder();
+
+            embed.setTitle(ctx.getTranslation({
+                en: "You've already replied!",
+                pl: "Już odpowiedziałeś!"
+            }));
+
+            let userAnswerEmoji = ":x:";
+
+            if(answer.answer == quiz.correctAnswer) {
+                userAnswerEmoji = ":white_check_mark:";
+                embed.setColor("Green");
+            } else {
+                embed.setColor("Red");
+            }
+
+            embed.setDescription(ctx.getTranslation({
+                en: `${userAnswerEmoji} Your answer: ${userAnswerText}\n:white_check_mark: Correct answer: ${correctAnswerText}`,
+                pl: `${userAnswerEmoji} Twoja odpowiedź: ${userAnswerText}\n:white_check_mark: Poprawna odpowiedź: ${correctAnswerText}`
+            }));
 
             ctx.interaction.editReply({
-                content: ctx.getTranslation({
-                    en: `You've already answered ${userAnswerText}! \nThe correct answer is: ${correctAnswerText}.`,
-                    pl: `Już odpowiedziałeś ${userAnswerText}! \nPoprawna odpowiedź to: ${correctAnswerText}.`
-                })
+                embeds: [embed]
             });
 
             return;
