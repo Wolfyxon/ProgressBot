@@ -20,6 +20,11 @@ export type RawDbQuizAnswer = {
     answer: Answer
 }
 
+export type QuizRemoveResult = { 
+    quizzes: DbRunResult, 
+    answers: DbRunResult 
+}
+
 export class QuizManager {
     db: Database;
     quizzes: Quizzes;
@@ -40,7 +45,7 @@ export class QuizManager {
         return this.quizzes.addQuiz(messageId, correctAnswer, rewardXp);
     }
 
-    public removeQuiz(messageId: string): { quizzes: DbRunResult, answers: DbRunResult } {
+    public removeQuiz(messageId: string): QuizRemoveResult {
         return {
             quizzes: this.db.run(
                 `DELETE FROM ${this.quizzes.name} WHERE messageId = ?`
