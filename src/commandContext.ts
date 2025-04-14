@@ -60,7 +60,7 @@ export class CommandRunContext extends CommandContext<ChatInputCommandInteractio
             filter: i =>
                 i.customId == id &&
                 i.user.id == this.interaction.user.id,
-            time: 60000
+            time: (60 * 1000) * 15
         })
     }
 }
