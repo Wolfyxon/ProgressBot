@@ -25,6 +25,7 @@ async function main() {
         intents: [
             GatewayIntentBits.Guilds,
             GatewayIntentBits.GuildMembers,
+            GatewayIntentBits.GuildMessages,
             GatewayIntentBits.GuildVoiceStates
         ]
     });
