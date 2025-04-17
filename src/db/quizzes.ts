@@ -48,24 +48,11 @@ export class QuizManager {
         const quizzes = this.quizzes.queryQuizzes().value;
 
         quizzes.forEach(async q => {
-            const mgr = this;
-            
-            function remove() {
-                console.log(`Removing quiz: ${q.quizId}`);
-                mgr.removeQuiz(q.quizId);
-            }
-
-            const channel = await this.db.botCtx.client!.channels.cache.get(q.channelId);
-            
-            if(!channel || !channel.isTextBased()) {
-                remove();
-                return;
-            }
-
-            const msg = await channel.messages.cache.get(q.messageId);
+            const msg = await this.db.botCtx.getMessage(q.channelId, q.messageId);
 
             if(!msg) {
-                remove();
+                console.log(`Removing quiz: ID: ${q.quizId} channel: ${q.channelId} message: ${q.messageId}`);
+                this.removeQuiz(q.quizId);
             }
         });
     }
