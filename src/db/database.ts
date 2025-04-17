@@ -52,6 +52,10 @@ export default class Database {
         this.quizzes.setup();
     }
 
+    public cleanup() {
+        this.quizzes.cleanup();
+    }
+
     public queryAll(sql: string, ...params: any[]): DbResult<any[]> {
         const q = this.db.prepare(sql);
         

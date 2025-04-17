@@ -32,6 +32,8 @@ async function main() {
     
     client.once(Events.ClientReady, () => {
         console.log(`Logged in successfully as ${client.user?.tag}`);
+
+        db.cleanup();
     });
 
     client.on(Events.InteractionCreate, interaction => {
