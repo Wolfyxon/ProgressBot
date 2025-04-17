@@ -15,6 +15,16 @@ export default class BotContext {
         }
     }
 
+    public async getTextChannel(id: string): Promise<Channel | null> {
+        const channel = await this.getChannel(id);
+        
+        if(channel && channel.isTextBased()) {
+            return channel;
+        } else {
+            return null;
+        }
+    }
+
     public async getMessageInChannel(channel: TextChannel, id: string): Promise<Message | null> {
         try {
             return await channel.messages.fetch(id);
