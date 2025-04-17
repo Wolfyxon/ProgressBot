@@ -1,3 +1,5 @@
+import { BaseMessageOptions, MessageEditOptions } from "discord.js";
+
 export function limitStr(str: string, charLimit: number): string {
     const suffix = "...";
     const trimmed = str.substring(0, charLimit - suffix.length);
@@ -31,6 +33,20 @@ export function parseJsonOrNull(json: string): Object | null {
         return JSON.parse(json);
     } catch {
         return null;
+    }
+}
+
+export function trimMessageJson(data: BaseMessageOptions | MessageEditOptions): BaseMessageOptions {
+    let content = data.content;
+    
+    if(content === null) {
+        content = undefined;
+    }
+
+    return {
+        content: content,
+        embeds: data.embeds,
+        components: data.components
     }
 }
 
