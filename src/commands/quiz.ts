@@ -1,10 +1,11 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, MessageFlags, ModalBuilder, SlashCommandBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
+import { ActionRowBuilder, APIEmbedField, ButtonBuilder, ButtonStyle, EmbedBuilder, MessageFlags, ModalBuilder, SlashCommandBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import Command from "../command";
 import { Answer } from "../db/quizzes";
 import { wait } from "../utils";
 import { InteractionContext } from "../interactionContext";
 
 const answerLetters = ["a", "b", "c", "d"];
+const answerEmojis = ["🟦", "⬛", "🟩", "🟥"];
 
 export async function showQuizModal(ctx: InteractionContext<any>, correctAnswer: string, reward: number, initDescription?: string, initAnswers?: string[]) {
     const correctAnswerIdx = answerLetters.indexOf(correctAnswer);
@@ -61,16 +62,29 @@ export async function showQuizModal(ctx: InteractionContext<any>, correctAnswer:
         pl: "Nagroda"
     });
 
+    const answerPrefix = ctx.getTranslation({
+        en: "Answer",
+        pl: "Odpowiedź"
+    });
+
     return await modalInt.reply({
         embeds: [
             new EmbedBuilder()
                 .setDescription(
                     [
                         description,
-                        answers.map((ans, i) => `:regional_indicator_${answerLetters[i]}: ${ans}`).join("\n"),
+                        //answers.map((ans, i) => `:regional_indicator_${answerLetters[i]}: ${ans}`).join("\n"),
                         `:star: **${rewardText}:** \`${reward}\` XP`
                         
                     ].join("\n\n")
+                )
+                .setFields(
+                    answers.map((ans, i) => {
+                        return { 
+                            name: `${answerEmojis[i]} ${answerPrefix} ${answerLetters[i].toUpperCase()}:`, 
+                            value: ans
+                        }
+                    }),
                 )
         ],
         components: [
