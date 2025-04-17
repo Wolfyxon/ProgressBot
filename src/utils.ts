@@ -26,6 +26,14 @@ export function wordWrap(str: string, lineLength: number): string {
     return lines.join("\n");
 }
 
+export function parseJsonOrNull(json: string): Object | null {
+    try {
+        return JSON.parse(json);
+    } catch {
+        return null;
+    }
+}
+
 export function cleanStr(str: string): string {
     return str.replace(/\s+/g,' ').trim();
 }
