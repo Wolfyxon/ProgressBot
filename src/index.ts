@@ -62,6 +62,7 @@ async function main() {
     botCtx.client = client;
     botCtx.db = db;
 
+    console.log("Logging in...");
     client.login(TOKEN);
 }
 
